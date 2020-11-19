@@ -29,7 +29,7 @@ func main() {
 	// flag.Parse 要在第一行执行
 	flag.Parse()
 
-	//设置使用CPU的核心个数
+	//设置本应用最大使用CPU的核心个数，默认使用所有CPU
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	note := `
