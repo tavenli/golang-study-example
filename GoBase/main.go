@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"math"
@@ -20,7 +21,16 @@ import (
 	"time"
 )
 
+var appname = flag.String("appname", "demo", "app name")
+var bShowVersion = flag.Bool("version", false, "show version")
+var port = flag.Int("version", 8000, "server port")
+
 func main() {
+	// flag.Parse 要在第一行执行
+	flag.Parse()
+
+	//设置使用CPU的核心个数
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	note := `
 		这里是定义一段可以换行的字符串内容，
