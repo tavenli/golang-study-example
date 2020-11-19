@@ -294,7 +294,7 @@ func demo_collection() {
 
 	fmt.Println(len(users), cap(users))
 
-	slice_remove(users, 1)
+	users = slice_remove(users, 1)
 
 	//-----------------------------------
 	map1 := make(map[string]int)
