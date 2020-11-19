@@ -9,9 +9,14 @@ import (
 
 func main() {
 
+	note := `
+		这里是定义一段可以换行的字符串内容，
+		是不是很方便？
+	`
+
 	msg := fmt.Sprint("myage", ":", 30)
 	fmt.Println("拼接成字符串：", msg)
-	fmt.Println("拼接成字符串2：" + msg)
+	fmt.Println("拼接成字符串2：" + note)
 	fmt.Println("---------------")
 
 	GoLangInitObj()
