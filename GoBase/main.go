@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"runtime"
 	"runtime/debug"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -183,6 +184,10 @@ func test() {
 
 func demo_string() {
 
+	//字符串转byte
+	b := []byte("abc1def1")
+	fmt.Println(b)
+
 	fmt.Println("查找子串是否在指定的字符串中")
 	fmt.Println(" Contains 函数的用法")
 	fmt.Println(strings.Contains("seafood", "foo")) //true
@@ -281,6 +286,31 @@ func demo_string() {
 	fmt.Println("")
 	fmt.Println(" SplitAfterN 函数的用法")
 	fmt.Printf("%q\n", strings.SplitAfterN("/home/m_ta/src", "/", 2)) //["/"
+
+	/*
+		//string到int
+		int, err := strconv.Atoi(string)
+		//string到int64
+		int64, err := strconv.ParseInt(string, 10, 64)
+		//int到string
+		string := strconv.Itoa(int)
+		//int64到string
+		string := strconv.FormatInt(int64, 10)
+	*/
+
+	//
+	var e interface{}
+	e = 10
+
+	switch v := e.(type) {
+	case int:
+		fmt.Println("整型", v)
+		break
+	case string:
+		fmt.Println("字符串", v)
+		break
+
+	}
 
 }
 
@@ -1207,3 +1237,31 @@ func LinkInputs(inputs ...interface{}) string {
 // 	}
 // 	return buf.String()
 // }
+
+func demo_order_sort() {
+	//排序
+	intList := []int{2, 4, 3, 5, 7, 6, 9, 8, 1, 0}
+	float8List := []float64{4.2, 5.9, 12.3, 10.0, 50.4, 99.9, 31.4, 27.81828, 3.14}
+	// float4List := [] float32 {4.2, 5.9, 12.3, 10.0, 50.4, 99.9, 31.4, 27.81828, 3.14}    // no function : sort.Float32s
+	stringList := []string{"a", "c", "b", "d", "f", "i", "z", "x", "w", "y"}
+
+	sort.Ints(intList)
+	sort.Float64s(float8List)
+	sort.Strings(stringList)
+
+	fmt.Printf("%v\n%v\n%v\n", intList, float8List, stringList)
+
+}
+
+func demo_order_sort2() {
+	//反向排序
+	intList := []int{2, 4, 3, 5, 7, 6, 9, 8, 1, 0}
+	float8List := []float64{4.2, 5.9, 12.3, 10.0, 50.4, 99.9, 31.4, 27.81828, 3.14}
+	stringList := []string{"a", "c", "b", "d", "f", "i", "z", "x", "w", "y"}
+
+	sort.Sort(sort.Reverse(sort.IntSlice(intList)))
+	sort.Sort(sort.Reverse(sort.Float64Slice(float8List)))
+	sort.Sort(sort.Reverse(sort.StringSlice(stringList)))
+
+	fmt.Printf("%v\n%v\n%v\n", intList, float8List, stringList)
+}
