@@ -330,6 +330,39 @@ func demo_collection() {
 	delete(map1, "two")
 	fmt.Println(map1, len(map1))
 
+	/*
+
+		for k, v := range itemTagMap {
+			fmt.Printf("k=%v, v=%v\n", k, v)
+			if v == "person" {
+				p++
+			}
+
+			if v == "team" {
+				t++
+			}
+
+		}
+
+		var rawMap map[string]interface{}
+
+		var itemTagMap = make(map[int64]string)
+		for i := 0; i < len(itemIds); i++ {
+			voteItem := services.GetVoteItem(itemIds[i])
+			itemTagMap[voteItem.Id] = voteItem.ItemTag
+		}
+
+		//遍历map
+		for k, v := range itemTagMap {
+
+		}
+
+		var rateResults []*models.RateResult
+
+		rateResults = append(rateResults, rateResult)
+
+	*/
+
 }
 
 func slice_remove(s []*UserData, i int) []*UserData {
@@ -400,6 +433,93 @@ func StrArrayContain(slice []string, value string) bool {
 		}
 	}
 	return false
+}
+
+//golang学习之指针、内存分配
+func pointer_test() {
+	//空指针，输出为nil
+	var p *int
+	fmt.Printf("p: %v\n", p)
+	//p: <nil>
+
+	//指向局部变量，变量值初始为0
+	var i int
+	p = &i
+	fmt.Printf("p: %v,%v\n", p, *p)
+	//p: 0xc04203c440,0
+
+	i = 100
+	fmt.Println("i:", i)   //i: 100
+	fmt.Println("&i:", &i) //&i: 0xc04203c440
+
+	//通过指针修改变量数值
+	*p = 8
+	fmt.Printf("p: %v,%v\n", p, *p)
+	//p: 0xc04200a4f0,8
+
+	//数组的初始化及输出
+	m := [3]int{3, 4, 5}
+	fmt.Printf("m:%v--%v,%v,%v\n", m, m[0], m[1], m[2])
+	//m:[3 4 5]--3,4,5
+
+	//指针数组的初始化及输出
+	//j, k, l := 3, 4, 5
+	//x := [3]*int{&j, &k, &l}
+	x := [3]*int{&m[0], &m[1], &m[2]}
+	fmt.Printf("x:%v,%v,%v\n", x[0], x[1], x[2])     //x:0xc04205c860,0xc04205c868,0xc04205c870
+	fmt.Printf("*x:%v,%v,%v\n", *x[0], *x[1], *x[2]) //*x:3,4,5
+
+	var n [3]*int
+	n = x
+	fmt.Printf("n:%v,%v,%v\n", n[0], n[1], n[2])
+	//指向数组的指针，也即二级指针的使用
+	y := []*[3]*int{&x}
+	fmt.Printf("y:%v,%v\n", y, y[0])
+	fmt.Printf("*y[0]:%v\n", *y[0])
+	fmt.Printf("*y[][]:%v,%v,%v\n", *y[0][0], *y[0][1], *y[0][2])
+	/*
+	   *X            ->    v
+	   [3]X        ->    [v0][v1][v2]
+	   []X            ->    [v0]...[vi]
+	   [3]*X        ->    [p0][p1][p2]
+	                     |   |   |
+	                     j   k   l
+	   []*[3]*X    ->    [n0]...[ni]
+	                     | ... |
+	                    [p0]->j
+	                    [p1]->k
+	                    [p2]->l
+	*/
+}
+
+type Student struct {
+	name  string
+	id    int
+	score uint
+}
+
+func memery_test() {
+	//new分配出来的数据是指针形式
+	p := new(Student)
+	p.name = "China"
+	p.id = 63333
+	p.score = 99
+	fmt.Println(*p)
+	//var定义的变量是数值形式
+	var st Student
+	st.name = "Chinese"
+	st.id = 666333
+	st.score = 100
+	fmt.Println(st)
+	//make分配slice、map和channel的空间，并且返回的不是指针
+	var ptr *[]Student
+	fmt.Println(ptr)     //ptr == nil
+	ptr = new([]Student) //指向一个空的slice
+	fmt.Println(ptr)
+	*ptr = make([]Student, 3, 100)
+	fmt.Println(ptr)
+	stu := []Student{{"China", 3333, 66}, {"Chinese", 4444, 77}, {"Chince", 5555, 88}}
+	fmt.Println(stu)
 }
 
 //	显示当前系统基本信息
