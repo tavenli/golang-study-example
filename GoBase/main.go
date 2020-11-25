@@ -24,7 +24,7 @@ import (
 
 var appname = flag.String("appname", "demo", "app name")
 var bShowVersion = flag.Bool("version", false, "show version")
-var port = flag.Int("version", 8000, "server port")
+var port = flag.Int("port", 8000, "server port")
 
 func main() {
 	// flag.Parse 要在第一行执行
