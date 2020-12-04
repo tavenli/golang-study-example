@@ -37,6 +37,29 @@ func main() {
 		这里是定义一段可以换行的字符串内容，
 		是不是很方便？
 	`
+	num1 := int32(100)
+	num2 := int32(200)
+	num2 = num1
+
+	num2 = 300
+	fmt.Println(num1) //100
+	fmt.Println(num2) //300
+
+	userData1 := new(UserData)
+	userData1.UserName = "小李"
+	userData2 := new(UserData)
+	userData2 = userData1
+	userData2.UserName = "小张"
+	fmt.Println(userData1.UserName) //小张
+	fmt.Println(userData2.UserName) //小张
+
+	userData3 := UserData{}
+	userData3.UserName = "小李"
+	userData4 := UserData{}
+	userData4 = userData3
+	userData4.UserName = "小张"
+	fmt.Println(userData3.UserName) //小李
+	fmt.Println(userData4.UserName) //小张
 
 	msg := fmt.Sprint("myage", ":", 30)
 	fmt.Println("拼接成字符串：", msg)
