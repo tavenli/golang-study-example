@@ -1,8 +1,12 @@
-
+target
 logs
+node_modules
+
+
+.idea
+.temp
 
 *.log
 *.iml
-*.exe
-
 *.sum
+/law-web/law-web
