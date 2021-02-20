@@ -10,7 +10,8 @@ import (
 func main() {
 	fmt.Println("开始测试")
 
-	outputPdfText("d:\\test.pdf")
+	err := outputPdfText("d:\\test.pdf")
+	fmt.Println(err)
 
 	fmt.Println("结束测试")
 }
@@ -18,6 +19,7 @@ func main() {
 func outputPdfText(inputPath string) error {
 	f, err := os.Open(inputPath)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -25,11 +27,13 @@ func outputPdfText(inputPath string) error {
 
 	pdfReader, err := pdf.NewPdfReader(f)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	numPages, err := pdfReader.GetNumPages()
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
