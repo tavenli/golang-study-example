@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,50 @@ func main() {
 		c.JSON(200, gin.H{
 			"code": 0,
 			"msg":  "ok",
+		})
+	})
+
+	router.POST("/uploadFile", func(c *gin.Context) {
+
+		//获取表单数据 参数为name值
+		f, err := c.FormFile("file")
+		//错误处理
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err,
+			})
+			return
+		} else {
+			//将文件保存至本项目根目录中
+			c.SaveUploadedFile(f, f.Filename)
+			//保存成功返回正确的Json数据
+			c.JSON(http.StatusOK, gin.H{
+				"message": "OK",
+			})
+		}
+	})
+
+	router.POST("/uploadFiles", func(c *gin.Context) {
+		//router := gin.Default()
+		// 8 MiB 设置最大的上传文件的大小
+		//router.MaxMultipartMemory = 8 << 20
+
+		//多文件上传
+		form,err:=c.MultipartForm()
+		files:=form.File["files"]
+		//错误处理
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err,
+			})
+			return
+		}
+		for _,f:=range files {
+			fmt.Println(f.Filename)
+			c.SaveUploadedFile(f,f.Filename)
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"message": "OK",
 		})
 	})
 
