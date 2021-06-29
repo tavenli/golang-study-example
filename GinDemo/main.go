@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/websocket"
 	"io"
 	"net/http"
 	"os"
@@ -63,8 +64,8 @@ func main() {
 		//router.MaxMultipartMemory = 8 << 20
 
 		//多文件上传
-		form,err:=c.MultipartForm()
-		files:=form.File["files"]
+		form, err := c.MultipartForm()
+		files := form.File["files"]
 		//错误处理
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -72,15 +73,55 @@ func main() {
 			})
 			return
 		}
-		for _,f:=range files {
+		for _, f := range files {
 			fmt.Println(f.Filename)
-			c.SaveUploadedFile(f,f.Filename)
+			c.SaveUploadedFile(f, f.Filename)
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"message": "OK",
 		})
 	})
 
+	//
+	attachWebsocket(router)
+
 	router.Run(":7070")
 
+}
+
+//Gin中加入 websocket
+var upGrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+func wsHello(c *gin.Context) {
+	//升级get请求为webSocket协议
+	ws, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		return
+	}
+	defer ws.Close()
+	for {
+		//读取ws中的数据
+		mt, message, err := ws.ReadMessage()
+		if err != nil {
+			break
+		}
+		if string(message) == "ping" {
+			message = []byte("pong")
+		}
+		//写入ws数据
+		err = ws.WriteMessage(mt, message)
+		if err != nil {
+			break
+		}
+	}
+}
+
+func attachWebsocket(router *gin.Engine) {
+	//Gin中加入 websocket
+	//ws://127.0.0.1:7070/wsHello
+	router.GET("/wsHello", wsHello)
 }
