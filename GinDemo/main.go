@@ -99,14 +99,17 @@ var upGrader = websocket.Upgrader{
 
 func wsHello(c *gin.Context) {
 	//升级get请求为webSocket协议
-	ws, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+	wsConn, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+
 	if err != nil {
 		return
 	}
-	defer ws.Close()
+
+	defer wsConn.Close()
+
 	for {
 		//读取ws中的数据
-		mt, message, err := ws.ReadMessage()
+		mt, message, err := wsConn.ReadMessage()
 		if err != nil {
 			break
 		}
@@ -114,11 +117,12 @@ func wsHello(c *gin.Context) {
 			message = []byte("pong")
 		}
 		//写入ws数据
-		err = ws.WriteMessage(mt, message)
+		err = wsConn.WriteMessage(mt, message)
 		if err != nil {
 			break
 		}
 	}
+
 }
 
 func attachWebsocket(router *gin.Engine) {
@@ -130,25 +134,26 @@ func attachWebsocket(router *gin.Engine) {
 	router.GET("/wsHello", wsHello)
 }
 
-
-func clientWebsocket(){
+func clientWebsocket() {
 	url := "ws://127.0.0.1:7070/wsHello"
-	ws, _, err := websocket.DefaultDialer.Dial(url, nil)
+	wsConn, _, err := websocket.DefaultDialer.Dial(url, nil)
+
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	go func() {
 		for {
-			err := ws.WriteMessage(websocket.BinaryMessage,[]byte("ping"))
+			err := wsConn.WriteMessage(websocket.BinaryMessage, []byte("ping"))
 			if err != nil {
 				fmt.Println(err)
 			}
-			time.Sleep(time.Second*2)
+			time.Sleep(time.Second * 2)
 		}
 	}()
 
 	for {
-		_, data, err := ws.ReadMessage()
+		_, data, err := wsConn.ReadMessage()
 		if err != nil {
 			fmt.Println(err)
 		}
