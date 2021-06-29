@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -127,4 +128,31 @@ func attachWebsocket(router *gin.Engine) {
 	//在线测试客户端 http://www.websocket-test.com
 
 	router.GET("/wsHello", wsHello)
+}
+
+
+func clientWebsocket(){
+	url := "ws://127.0.0.1:7070/wsHello"
+	ws, _, err := websocket.DefaultDialer.Dial(url, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	go func() {
+		for {
+			err := ws.WriteMessage(websocket.BinaryMessage,[]byte("ping"))
+			if err != nil {
+				fmt.Println(err)
+			}
+			time.Sleep(time.Second*2)
+		}
+	}()
+
+	for {
+		_, data, err := ws.ReadMessage()
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("receive: ", string(data))
+	}
+
 }
