@@ -123,5 +123,8 @@ func wsHello(c *gin.Context) {
 func attachWebsocket(router *gin.Engine) {
 	//Gin中加入 websocket
 	//ws://127.0.0.1:7070/wsHello
+
+	//在线测试客户端 http://www.websocket-test.com
+
 	router.GET("/wsHello", wsHello)
 }
