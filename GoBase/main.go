@@ -72,6 +72,8 @@ func main() {
 
 	demo_string()
 
+	GetInstance3().Eat()
+
 	fmt.Println("==========================")
 }
 

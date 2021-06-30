@@ -98,6 +98,8 @@ var upGrader = websocket.Upgrader{
 }
 
 func wsHello(c *gin.Context) {
+	//比较完整的例子，参考 https://github.com/gorilla/websocket/tree/master/examples/chat
+
 	//升级get请求为webSocket协议
 	wsConn, err := upGrader.Upgrade(c.Writer, c.Request, nil)
 
