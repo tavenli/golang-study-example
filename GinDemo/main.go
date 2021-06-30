@@ -135,6 +135,9 @@ func attachWebsocket(router *gin.Engine) {
 }
 
 func clientWebsocket() {
+	//参考例子
+	//https://github.com/gorilla/websocket/tree/master/examples/echo
+
 	url := "ws://127.0.0.1:7070/wsHello"
 	wsConn, _, err := websocket.DefaultDialer.Dial(url, nil)
 
