@@ -26,6 +26,22 @@ func JavaLongTime(javaLong int64) time.Time {
 	return time.Unix(0, javaLong*1000000)
 }
 
+func LongTime(lt int64) time.Time {
+	//1492566520958	-> 2017-04-19 09:48:40
+	//1623819567485
+	return time.Unix(0, lt*1000000)
+}
+
+func Float64Time(lt float64) time.Time {
+	//1492566520958	-> 2017-04-19 09:48:40
+	return time.Unix(0, int64(lt)*1000000)
+}
+
+func Float64TimeLocal(lt float64) time.Time {
+	//1492566520958	-> 2017-04-19 09:48:40
+	return time.Unix(0, int64(lt)*1000000).Local()
+}
+
 func ToTime(timeStr string) (time.Time, error) {
 	loc, _ := time.LoadLocation("Local")
 	toTime, err := time.ParseInLocation(timeLayout, timeStr, loc)

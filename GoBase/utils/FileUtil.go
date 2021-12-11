@@ -29,6 +29,7 @@ func FileRead(name string) ([]byte, error) {
 }
 
 func MakeDir(path string, perm os.FileMode) error {
+	//os.MkdirAll("dir1/dir2/dir3", os.ModePerm)
 	//return os.Mkdir(path, perm)
 	return os.MkdirAll(path, perm)
 }
