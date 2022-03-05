@@ -74,6 +74,8 @@ func main() {
 
 	GetInstance3().Eat()
 
+	Service_Main()
+
 	fmt.Println("==========================")
 }
 
