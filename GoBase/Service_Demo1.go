@@ -27,6 +27,7 @@ func Service_Main() {
 		logger.Error(err)
 	}
 
+	//要用管理员权限运行命令，才能成功注册为服务
 	err = service.Control(s, "install")
 	if err != nil {
 		log.Fatal(err)
