@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
+	"golang.org/x/time/rate"
 	"time"
 )
-import "golang.org/x/time/rate"
 
-func LimitRate_Demo1_main(){
+func LimitRate_Demo1_main() {
 	//限流器
 
 	//NewLimiter(r Limit, b int)
@@ -14,13 +14,13 @@ func LimitRate_Demo1_main(){
 	//b 代表Token桶的容量大小
 
 	//每100ms往桶中放一个Token
-	limiter := rate.NewLimiter(rate.Every(time.Millisecond * 100), 1)
+	limiter := rate.NewLimiter(rate.Every(time.Millisecond*100), 1)
 
 	//三种消费Token的方式：Wait、Allow、Reserve
 
 	//Wait方式
 	//可以设置context的Deadline或者Timeout，来决定此次Wait的最长时间
-	limiter.Wait(context.Background())	//Wait实际上就是WaitN(ctx,1)
+	limiter.Wait(context.Background()) //Wait实际上就是WaitN(ctx,1)
 	//limiter.WaitN(context.Background(),2)
 
 	//Allow方式
@@ -34,10 +34,8 @@ func LimitRate_Demo1_main(){
 	//必须等到等待时间之后，才能进行接下来的工作，如果不想等待，可以调用Cancel()方法，该方法会将Token归还
 	limiter.ReserveN(time.Now(), 1)
 
-
 	//在运行时动态调整限流器参数
 	limiter.SetLimit(rate.Every(time.Millisecond * 10))
 	limiter.SetBurst(20)
-
 
 }
