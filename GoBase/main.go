@@ -25,10 +25,13 @@ import (
 var appname = flag.String("appname", "demo", "app name")
 var bShowVersion = flag.Bool("version", false, "show version")
 var port = flag.Int("port", 8000, "server port")
+var action = flag.String("action", "", "支持的参数有  start ,  stop ,  restart ,  install ,  uninstall ")
 
 func main() {
 	// flag.Parse 要在第一行执行
 	flag.Parse()
+
+	fmt.Println(*appname)
 
 	//设置本应用最大使用CPU的核心个数，默认使用所有CPU
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -72,6 +75,7 @@ func main() {
 
 	demo_string()
 
+	//单例模式
 	GetInstance3().Eat()
 
 	Service_Main()

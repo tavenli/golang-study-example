@@ -1,0 +1,1 @@
+GoBase.exe -action uninstall
