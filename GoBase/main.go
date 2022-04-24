@@ -64,9 +64,15 @@ func main() {
 	fmt.Println(userData3.UserName) //小李
 	fmt.Println(userData4.UserName) //小张
 
+	//var pStr *string
+	//var pStr = new(string)
+	pStr := new(string)
+	*pStr = "指针类型字符串赋值"
+
 	msg := fmt.Sprint("myage", ":", 30)
 	fmt.Println("拼接成字符串：", msg)
 	fmt.Println("拼接成字符串2：" + note)
+	fmt.Println("*pStr：", *pStr)
 	fmt.Println("---------------")
 
 	ShowSysInf()
