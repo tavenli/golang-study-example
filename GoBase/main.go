@@ -33,6 +33,8 @@ func main() {
 
 	fmt.Println(*appname)
 
+	fmt.Println(flag.Args())
+
 	//设置本应用最大使用CPU的核心个数，默认使用所有CPU
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
@@ -83,6 +85,8 @@ func main() {
 
 	//单例模式
 	GetInstance3().Eat()
+
+	HangUp_Main_Demo5()
 
 	Service_Main()
 
