@@ -88,6 +88,8 @@ func main() {
 
 	HangUp_Main_Demo5()
 
+	TestSnowflakeGen()
+
 	Service_Main()
 
 	fmt.Println("==========================")

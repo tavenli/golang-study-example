@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"github.com/panjf2000/ants/v2"
 	"sync"
 	"time"
 )
@@ -24,7 +26,7 @@ import (
 */
 
 const (
-	twepoch        = int64(1483228800000)             //开始时间截 (2017-01-01)
+	twepoch        = int64(1640966400000)             //开始时间截 (2022-01-01 00:00:00)
 	workeridBits   = uint(10)                         //机器id所占的位数
 	sequenceBits   = uint(12)                         //序列所占的位数
 	workeridMax    = int64(-1 ^ (-1 << workeridBits)) //支持的最大机器id数量
@@ -80,4 +82,23 @@ func (s *Snowflake) Generate() int64 {
 
 	s.Unlock()
 	return r
+}
+
+func TestSnowflakeGen() {
+
+	sf, _ := NewSnowflake(1001)
+	fmt.Println(sf.Generate())
+	fmt.Println(sf.Generate())
+
+	var wg sync.WaitGroup
+	syncCalculateSum := func() {
+		fmt.Println(sf.Generate())
+		wg.Done()
+	}
+	for i := 0; i < 10000; i++ {
+		wg.Add(1)
+		_ = ants.Submit(syncCalculateSum)
+	}
+	wg.Wait()
+
 }
