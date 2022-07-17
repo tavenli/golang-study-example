@@ -90,7 +90,9 @@ func main() {
 
 	TestSnowflakeGen()
 
-	Service_Main()
+	//Service_Main()
+
+	GenericDemo()
 
 	fmt.Println("==========================")
 }
