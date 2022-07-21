@@ -77,6 +77,13 @@ func main() {
 	fmt.Println("*pStr：", *pStr)
 	fmt.Println("---------------")
 
+	//18446744073709551615
+	//18000000000000000000
+	_uint64 := uint64(18000000000000000000)
+	fmt.Println(_uint64)
+	_int64 := int64(_uint64)
+	fmt.Println(_int64)
+
 	ShowSysInf()
 
 	GoLangInitObj()
@@ -88,11 +95,13 @@ func main() {
 
 	HangUp_Main_Demo5()
 
-	TestSnowflakeGen()
+	//TestSnowflakeGen()
 
 	//Service_Main()
 
 	GenericDemo()
+
+	demo_array_op()
 
 	fmt.Println("==========================")
 }
@@ -1282,6 +1291,34 @@ func LinkInputs(inputs ...interface{}) string {
 // 	}
 // 	return buf.String()
 // }
+
+func demo_array_op() {
+	fmt.Println("demo_array_op")
+
+	//datas := make([]byte, 13)
+	datas := []byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+
+	fmt.Println(datas[0:])
+	fmt.Println(datas[5:])
+	fmt.Println(datas[:5])
+	fmt.Println(datas[:13])
+	fmt.Println(datas[0:5])
+	fmt.Println(datas[3:5])
+	fmt.Println(datas[5:10])
+	fmt.Println("demo_array_op")
+
+	/*
+
+		[0 1 2 3 4 5 6 7 8 9 10 11 12]
+		[5 6 7 8 9 10 11 12]
+		[0 1 2 3 4]
+		[0 1 2 3 4 5 6 7 8 9 10 11 12]
+		[0 1 2 3 4]
+		[3 4]
+		[5 6 7 8 9]
+
+	*/
+}
 
 func demo_order_sort() {
 	//排序
