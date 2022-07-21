@@ -1305,6 +1305,9 @@ func demo_array_op() {
 	fmt.Println(datas[0:5])
 	fmt.Println(datas[3:5])
 	fmt.Println(datas[5:10])
+	fmt.Println(datas[0:1])
+	fmt.Println(datas[5:6])
+	fmt.Println(datas[12:13])
 	fmt.Println("demo_array_op")
 
 	/*
@@ -1316,6 +1319,10 @@ func demo_array_op() {
 		[0 1 2 3 4]
 		[3 4]
 		[5 6 7 8 9]
+		[0]
+		[5]
+		[12]
+
 
 	*/
 }
