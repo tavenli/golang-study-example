@@ -113,6 +113,12 @@ type UserData struct {
 
 //GO语言变量声明和初始化
 func GoLangInitObj() {
+	//打印代码行数，skip 表示忽略的调用层级深度
+	pc, file, line, ok := runtime.Caller(1)
+	fmt.Println(pc)
+	fmt.Println(file)
+	fmt.Println(line)
+	fmt.Println(ok)
 
 	/*
 		make用于内建类型（map、slice 和channel）的内存分配
