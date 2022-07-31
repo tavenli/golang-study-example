@@ -366,6 +366,8 @@ func demo_string() {
 	case int:
 		fmt.Println("整型", v)
 		break
+	case float32, float64:
+		fmt.Println("浮点型", v)
 	case string:
 		fmt.Println("字符串", v)
 		break
