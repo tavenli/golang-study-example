@@ -8,10 +8,15 @@ import (
 
 //  GO的诞辰
 const timeLayout = "2006-01-02 15:04:05"
+const dateLayout = "2006-01-02"
 
 //  取当前系统时间
 func GetTimeNow() time.Time {
 	return time.Now()
+}
+
+func GoBirthday() time.Time {
+	return GetTime("2006-01-02 15:04:05")
 }
 
 func GetTime(timeStr string) time.Time {
@@ -24,6 +29,17 @@ func JavaLongTime(javaLong int64) time.Time {
 	//fmt.Println(time.Unix(1492566520958/1000, 0))
 	//fmt.Println(time.Unix(0, 1492566520958*1000000))
 	return time.Unix(0, javaLong*1000000)
+}
+
+func GetUnix() int64 {
+	//time.Now().Unix()		1625240837
+	//time.Now().UnixNano()		1625240879850643200
+
+	return time.Now().Unix()
+}
+
+func UnixToTime(unix int64) time.Time {
+	return time.Unix(unix, 0)
 }
 
 func LongTime(lt int64) time.Time {
@@ -45,6 +61,14 @@ func Float64TimeLocal(lt float64) time.Time {
 func ToTime(timeStr string) (time.Time, error) {
 	loc, _ := time.LoadLocation("Local")
 	toTime, err := time.ParseInLocation(timeLayout, timeStr, loc)
+	//toTime, err := time.Parse(timeLayout, timeStr)
+	return toTime, err
+
+}
+
+func ToTimeFromDate(timeStr string) (time.Time, error) {
+	loc, _ := time.LoadLocation("Local")
+	toTime, err := time.ParseInLocation(dateLayout, timeStr, loc)
 	//toTime, err := time.Parse(timeLayout, timeStr)
 	return toTime, err
 
@@ -85,6 +109,11 @@ func FormatTime(t time.Time) string {
 func FormatTimeToNum(t time.Time) string {
 	//
 	return FormatTimeByFm(t, "20060102150405")
+}
+
+func FormatTimeToDayNum(t time.Time) string {
+	//
+	return FormatTimeByFm(t, "20060102")
 }
 
 //  在当前时间之前
@@ -134,6 +163,11 @@ func DifferSec(firstTime time.Time, secondTime time.Time) int64 {
 	return int64(math.Abs(result))
 }
 
+func DifferMilsec(firstTime time.Time, secondTime time.Time) int64 {
+	result := SubDateTime(firstTime, secondTime).Milliseconds()
+	return result
+}
+
 //  24小时前的时间
 func Before24h() time.Time {
 	t, _ := time.ParseDuration("-24h")
@@ -142,7 +176,7 @@ func Before24h() time.Time {
 
 func AddSecs(_time time.Time, secs int64) time.Time {
 	t, _ := time.ParseDuration("1s")
-	return time.Now().Add(t * time.Duration(secs))
+	return _time.Add(t * time.Duration(secs))
 }
 
 /*
@@ -151,12 +185,12 @@ func AddSecs(_time time.Time, secs int64) time.Time {
 */
 func AddMins(_time time.Time, mins int64) time.Time {
 	t, _ := time.ParseDuration("1m")
-	return time.Now().Add(t * time.Duration(mins))
+	return _time.Add(t * time.Duration(mins))
 }
 
 func AddHours(_time time.Time, hours int64) time.Time {
 	t, _ := time.ParseDuration("1h")
-	return time.Now().Add(t * time.Duration(hours))
+	return _time.Add(t * time.Duration(hours))
 }
 
 func AddDays(_time time.Time, days int) time.Time {
