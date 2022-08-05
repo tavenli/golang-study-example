@@ -103,12 +103,26 @@ func main() {
 
 	demo_array_op()
 
+	TimeTicker()
+
 	fmt.Println("==========================")
 }
 
 type UserData struct {
 	UserId   int
 	UserName string
+}
+
+func TimeTicker() {
+	//保持连接的心跳
+	ticker := time.NewTicker(5 * time.Second)
+
+	select {
+	case t := <-ticker.C:
+		//发送心跳包
+		fmt.Println("间隔时间执行：", t)
+		//ticker.Stop()
+	}
 }
 
 //GO语言变量声明和初始化
