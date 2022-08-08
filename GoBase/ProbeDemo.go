@@ -48,4 +48,27 @@ func Probe_Demo1_main() {
 	fmt.Println(diskInfos, err)
 	fmt.Println("==========================")
 
+	fmt.Println(hostInfo.Hostname)
+	fmt.Println(hostInfo.Platform)
+	fmt.Println(hostInfo.OS)
+
+	for _, v := range cpuInfo {
+		//物理CPU参数
+		fmt.Println(v.ModelName)
+		fmt.Println(v.Cores)
+		fmt.Println(v.Mhz)
+
+	}
+
+	for _, v := range netInfos {
+		//物理网卡参数
+		fmt.Println("网卡：", v.Name, v.HardwareAddr)
+		for _, j := range v.Addrs {
+			fmt.Println("绑定的IP：", j.Addr)
+		}
+
+	}
+
+	fmt.Println("==========================")
+
 }
