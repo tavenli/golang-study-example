@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"io"
@@ -10,6 +11,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+//go:embed templates
+var templateFs embed.FS
 
 func main() {
 	fmt.Println("------------")
@@ -28,8 +32,21 @@ func main() {
 	router.Static("/static", "./static")
 
 	//router.Delims("{.{", "}.}")
-	//router.LoadHTMLGlob("./templates/**/*")
 	//router.Use(ShowRequestInfo())
+
+	//Glob模式加载模板
+	//router.LoadHTMLGlob("./templates/**/*")
+
+	//加载指定模板文件
+	//router.LoadHTMLFiles("templates/index.html", "templates/index2.html")
+
+	//加载嵌入式模板
+	//t, _ := template.ParseFS(templateFs, "templates/**/**/*.html")
+	//router.SetHTMLTemplate(t)
+
+	//使用自定义模板
+	//html := template.Must(template.ParseFiles("templates/index.tmpl", "templates/index2.tmpl"))
+	//router.SetHTMLTemplate(html)
 
 	router.GET("/index", func(c *gin.Context) {
 
