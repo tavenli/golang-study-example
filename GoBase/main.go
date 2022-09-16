@@ -107,6 +107,8 @@ func main() {
 
 	Probe_Demo1_main()
 
+	ReqByProxy_Main()
+
 	fmt.Println("==========================")
 }
 
