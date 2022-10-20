@@ -40,9 +40,16 @@ func main() {
 	//加载指定模板文件
 	//router.LoadHTMLFiles("templates/index.html", "templates/index2.html")
 
-	//加载嵌入式模板
+	//加载嵌入式模板 方式1
 	//t, _ := template.ParseFS(templateFs, "templates/**/**/*.html")
 	//router.SetHTMLTemplate(t)
+
+	//实现fs.FS的类有：embed.FS、zip.Reader、os.DirFS、http.FS
+	//加载嵌入式模板 方式2
+	//workPath, _ := os.Getwd()
+	//t, err := template.ParseFS(os.DirFS(workPath), "templates/**/*.html")
+	//router.SetHTMLTemplate(t)
+	//fmt.Println(err)
 
 	//使用自定义模板
 	//html := template.Must(template.ParseFiles("templates/index.tmpl", "templates/index2.tmpl"))
