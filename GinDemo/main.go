@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -74,6 +75,25 @@ func main() {
 		dataMap["baby"] = 2021
 
 		c.String(http.StatusOK, "%v", dataMap)
+	})
+
+	router.Any("/reqParams", func(c *gin.Context) {
+		//c.Query("name2")
+		//c.PostForm("name1")
+		//c.DefaultPostForm("name1","abc")
+
+		err := c.Request.ParseForm()
+		fmt.Println(err)
+
+		body := c.Request.Body
+		bodyBytes, _ := ioutil.ReadAll(body)
+
+		c.JSON(200, gin.H{
+			"code":     0,
+			"msg":      "ok",
+			"PostForm": c.Request.PostForm,
+			"PostBody": string(bodyBytes),
+		})
 	})
 
 	router.POST("/uploadFile", func(c *gin.Context) {
