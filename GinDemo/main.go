@@ -63,6 +63,19 @@ func main() {
 		})
 	})
 
+	router.GET("/echo", func(c *gin.Context) {
+
+		c.String(http.StatusOK, "%s %d", "hi, TavenLi", 2022)
+	})
+
+	router.GET("/echo2", func(c *gin.Context) {
+		dataMap := make(map[string]interface{})
+		dataMap["taven"] = 2022
+		dataMap["baby"] = 2021
+
+		c.String(http.StatusOK, "%v", dataMap)
+	})
+
 	router.POST("/uploadFile", func(c *gin.Context) {
 
 		//获取表单数据 参数为name值
