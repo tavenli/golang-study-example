@@ -11,6 +11,7 @@ import (
 	"io"
 	"math"
 	"math/rand"
+	"net/url"
 	"os"
 	"reflect"
 	"regexp"
@@ -105,9 +106,20 @@ func main() {
 
 	//TimeTicker()
 
-	Probe_Demo1_main()
+	//Probe_Demo1_main()
 
-	ReqByProxy_Main()
+	//ReqByProxy_Main()
+
+	urlParam1 := "~!@#$&*()=:/,;?+'"
+	result1 := url.QueryEscape(urlParam1)
+	fmt.Println(result1)
+	fmt.Println(url.QueryUnescape(result1))
+
+	//默认是UTF-8编码
+	urlParam2 := "我爱北京天安门"
+	result2 := url.QueryEscape(urlParam2)
+	fmt.Println(result2)
+	fmt.Println(url.QueryUnescape(result2))
 
 	fmt.Println("==========================")
 }
