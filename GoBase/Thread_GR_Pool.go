@@ -7,6 +7,15 @@ import (
 	"time"
 )
 
+/*
+GoFrame的grpool通过协程复用，能够节省内存。
+
+结合我们的需求：
+如果你的服务器内存不高或者业务场景对内存占用的要求更高，那就使用grpool。
+如果服务器的内存足够，但是对耗时有较高的要求，就用原生的goroutine。
+
+*/
+
 func GoRoutinePool_main() {
 	pool := grpool.New(100)
 
