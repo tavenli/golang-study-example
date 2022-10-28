@@ -110,6 +110,8 @@ func main() {
 
 	//ReqByProxy_Main()
 
+	//GoRoutinePool_main()
+
 	urlParam1 := "~!@#$&*()=:/,;?+'"
 	result1 := url.QueryEscape(urlParam1)
 	fmt.Println(result1)
