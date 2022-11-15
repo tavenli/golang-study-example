@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoBase/utils"
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
@@ -122,6 +123,9 @@ func main() {
 	result2 := url.QueryEscape(urlParam2)
 	fmt.Println(result2)
 	fmt.Println(url.QueryUnescape(result2))
+
+	result, err := utils.HttpRequestRaw("payload.txt", true)
+	fmt.Println(result, err)
 
 	fmt.Println("==========================")
 }
