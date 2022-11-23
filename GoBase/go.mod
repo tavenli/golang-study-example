@@ -8,6 +8,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/kardianos/service v1.2.1
 	github.com/panjf2000/ants/v2 v2.4.7
+	github.com/robfig/cron v1.2.0
 	github.com/shirou/gopsutil/v3 v3.22.7
 	golang.org/x/net v0.0.0-20210520170846-37e1c6afe023
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11
