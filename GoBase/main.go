@@ -241,6 +241,9 @@ func GoLangInitObj() {
 }
 
 func funcA() error {
+	//Recover 是一个Go语言的内建函数，可以让进入宕机流程中的 goroutine 恢复过来，recover 仅在延迟函数 defer 中有效，
+	//也就是说 recover 是为了获取panic的异常信息，不让程序因为panic而崩溃，导致后续逻辑无法执行。
+
 	defer func() {
 		if p := recover(); p != nil {
 			fmt.Printf("panic recover! p: %v", p)
@@ -248,6 +251,12 @@ func funcA() error {
 		}
 	}()
 	return funcB()
+}
+
+func funcB() error {
+	// simulation
+	panic("foo")
+	return errors.New("success")
 }
 
 func funcA_2() (err error) {
@@ -266,13 +275,7 @@ func funcA_2() (err error) {
 	return funcB()
 }
 
-func funcB() error {
-	// simulation
-	panic("foo")
-	return errors.New("success")
-}
-
-func test() {
+func testRecover() {
 	err := funcA()
 	if err == nil {
 		fmt.Printf("err is nil\\n")
