@@ -8,20 +8,19 @@ import (
 	"net/url"
 )
 
-func ReverseProxy_main()  {
+func ReverseProxy_main() {
 
 	u, err := url.Parse("http://localhost:8080/test")
 	if err != nil {
-		log.Fatal("url.Parse: %v", err)
+		log.Fatalf("url.Parse: %v", err)
 	}
 	proxy := httputil.NewSingleHostReverseProxy(u)
 	log.Printf("Listening at :8081")
 	if err := http.ListenAndServe(":8081", proxy); err != nil {
-		log.Fatal("ListenAndServe: %v", err)
+		log.Fatal("ListenAndServe: ", err.Error())
 	}
 
 }
-
 
 func NewMultipleHostsReverseProxy(targets []*url.URL) *httputil.ReverseProxy {
 	director := func(req *http.Request) {
