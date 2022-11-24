@@ -18,7 +18,7 @@ pc 是 uintptr 这个返回的是函数指针
 file 是函数所在文件名目录
 line 所在行号
 ok 是否可以获取到信息
- */
+*/
 func Runtime_Demo1_main() {
 	for i := 0; i < 4; i++ {
 		rtest(i)
@@ -35,7 +35,7 @@ func call(skip int) {
 	fmt.Println(fmt.Sprintf("%v   %s   %d   %t   %s", pc, file, line, ok, pcName))
 }
 
-func call2(){
+func call2() {
 	//另一个类似的函数 runtime.Callers
 
 	// 取出调用栈50个数据
@@ -50,10 +50,9 @@ func call2(){
 	more := count > 0
 	for more {
 		frame, more = frames.Next()
-		fmt.Println(fmt.Sprintf("%v   %s   %d   %t   %s", frame.PC, frame.File, frame.Line, frame.Function))
+		fmt.Println(fmt.Sprintf("%v   %s   %d   %s", frame.PC, frame.File, frame.Line, frame.Function))
 	}
 }
-
 
 func Gosched_Demo() {
 	go func() {

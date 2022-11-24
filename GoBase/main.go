@@ -128,6 +128,8 @@ func main() {
 	fmt.Println(result, err)
 
 	fmt.Println("==========================")
+
+	FormatPlaceHolder_main()
 }
 
 type UserData struct {
@@ -315,7 +317,7 @@ func demo_string() {
 	fmt.Println(strings.EqualFold("Go", "go")) //大小写忽略
 	fmt.Println("")
 	fmt.Println(" Fields 函数的用法")
-	fmt.Println("Fields are: %q", strings.Fields("  foo bar  baz   ")) //["foo" "bar" "baz"] 返回一个列表
+	fmt.Printf("Fields are: %q", strings.Fields("  foo bar  baz   ")) //["foo" "bar" "baz"] 返回一个列表
 	//相当于用函数做为参数，支持匿名函数
 	for _, record := range []string{" aaa*1892*122", "aaa\taa\t", "124|939|22"} {
 		fmt.Println(strings.FieldsFunc(record, func(ch rune) bool {
