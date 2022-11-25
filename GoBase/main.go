@@ -130,6 +130,8 @@ func main() {
 	fmt.Println("==========================")
 
 	FormatPlaceHolder_main()
+
+	ConsoleCmdProcessBar_main()
 }
 
 type UserData struct {
