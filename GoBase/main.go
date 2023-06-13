@@ -129,9 +129,14 @@ func main() {
 
 	fmt.Println("==========================")
 
-	FormatPlaceHolder_main()
+	//FormatPlaceHolder_main()
 
-	ConsoleCmdProcessBar_main()
+	//ConsoleCmdProcessBar_main()
+
+	//HttpServer2_main()
+
+	//HttpClient2_Proxy_main()
+
 }
 
 type UserData struct {
