@@ -159,7 +159,7 @@ func TimeTicker() {
 
 }
 
-//GO语言变量声明和初始化
+// GO语言变量声明和初始化
 func GoLangInitObj() {
 	//打印代码行数，skip 表示忽略的调用层级深度
 	pc, file, line, ok := runtime.Caller(1)
@@ -578,7 +578,7 @@ func StrArrayContain(slice []string, value string) bool {
 	return false
 }
 
-//golang学习之指针、内存分配
+// golang学习之指针、内存分配
 func pointer_test() {
 	//空指针，输出为nil
 	var p *int
@@ -665,7 +665,7 @@ func memery_test() {
 	fmt.Println(stu)
 }
 
-//	显示当前系统基本信息
+// 显示当前系统基本信息
 func ShowSysInf() {
 
 	fmt.Println("★★★★★★★★★★★★★★★★★★★★★★★★")
@@ -689,8 +689,8 @@ func ShowSysInf() {
 
 }
 
-//	go不支持三元表达式，可以使用自定义的函数实现
-//	例如：max := utils.If(x > y, x, y).(int)
+// go不支持三元表达式，可以使用自定义的函数实现
+// 例如：max := utils.If(x > y, x, y).(int)
 func If(condition bool, trueVal, falseVal interface{}) interface{} {
 
 	if condition {
@@ -700,26 +700,26 @@ func If(condition bool, trueVal, falseVal interface{}) interface{} {
 }
 
 /*
-	交换int数据：a, b := utils.Swap(2, 9)
-	交换字符串数据：A, B := utils.Swap("Li", "Chen")
+交换int数据：a, b := utils.Swap(2, 9)
+交换字符串数据：A, B := utils.Swap("Li", "Chen")
 */
 func Swap(x, y interface{}) (interface{}, interface{}) {
 	return y, x
 }
 
-//	设置环境变量
+// 设置环境变量
 func SetEnv(key, value string) error {
 
 	return os.Setenv(key, value)
 }
 
-//	取环境变量的值
+// 取环境变量的值
 func GetEnv(key string) string {
 
 	return os.Getenv(key)
 }
 
-//取进程ID
+// 取进程ID
 func GetPid() int {
 	return os.Getpid()
 }
@@ -778,7 +778,7 @@ var (
 	CryptoSpecStr = "+=-@#~,.[]()!%^*$"
 )
 
-//生成32位md5字串
+// 生成32位md5字串
 func GetMd5(input string) string {
 	hash := md5.New()
 	hash.Write([]byte(input))
@@ -817,10 +817,10 @@ func GenRandomSalt(length int) string {
 	return string(result)
 }
 
-//  GO的诞辰
+// GO的诞辰
 const timeLayout = "2006-01-02 15:04:05"
 
-//  取当前系统时间
+// 取当前系统时间
 func GetTimeNow() time.Time {
 	return time.Now()
 }
@@ -853,12 +853,12 @@ func ToTimeByFm(timeStr string, format string) (time.Time, error) {
 
 }
 
-//要想格式化为：yyyyMMddHHmmss
-//则 format = "20060102150405"
-//要想格式化为：yyyy-MM-dd HH:mm:ss
-//则 format = "2006-01-02 15:04:05"
-//要想格式化为：yyyy-MM-dd
-//则 format = "2006-01-02"
+// 要想格式化为：yyyyMMddHHmmss
+// 则 format = "20060102150405"
+// 要想格式化为：yyyy-MM-dd HH:mm:ss
+// 则 format = "2006-01-02 15:04:05"
+// 要想格式化为：yyyy-MM-dd
+// 则 format = "2006-01-02"
 func FormatTimeByFm(t time.Time, format string) string {
 
 	return t.Format(format)
@@ -882,7 +882,7 @@ func FormatTimeToNum(t time.Time) string {
 	return FormatTimeByFm(t, "20060102150405")
 }
 
-//  在当前时间之前
+// 在当前时间之前
 func IsBeforeNow(t time.Time) (result bool) {
 	result = false
 	if &t != nil && t.Before(time.Now()) {
@@ -891,7 +891,7 @@ func IsBeforeNow(t time.Time) (result bool) {
 	return
 }
 
-//  在当前时间之后
+// 在当前时间之后
 func IsAfterNow(t time.Time) (result bool) {
 	result = false
 	if &t != nil && t.After(time.Now()) {
@@ -929,7 +929,7 @@ func DifferSec(firstTime time.Time, secondTime time.Time) int64 {
 	return int64(math.Abs(result))
 }
 
-//  24小时前的时间
+// 24小时前的时间
 func Before24h() time.Time {
 	t, _ := time.ParseDuration("-24h")
 	return time.Now().Add(t)
@@ -941,8 +941,8 @@ func AddSecs(_time time.Time, secs int64) time.Time {
 }
 
 /*
-   增加10分钟：utils.AddMins(time.Now(), 10)
-   减少5分钟：utils.AddMins(time.Now(), -5)
+增加10分钟：utils.AddMins(time.Now(), 10)
+减少5分钟：utils.AddMins(time.Now(), -5)
 */
 func AddMins(_time time.Time, mins int64) time.Time {
 	t, _ := time.ParseDuration("1m")
@@ -1024,7 +1024,7 @@ func Float64TryToInt64(num interface{}) int64 {
 	return int64(num.(float64))
 }
 
-//	返回最大值
+// 返回最大值
 func MaxInt(a, b int) int {
 	if a > b {
 		return a
@@ -1032,7 +1032,7 @@ func MaxInt(a, b int) int {
 	return b
 }
 
-//	返回最小值
+// 返回最小值
 func MinInt(a, b int) int {
 	if a < b {
 		return a
@@ -1168,33 +1168,33 @@ func TrimPrefix(str string, find string) string {
 	return strings.TrimPrefix(str, find)
 }
 
-//	strings.HasPrefix("ABC_xyz", "ABC")
+// strings.HasPrefix("ABC_xyz", "ABC")
 func StartsWith(str string, find string) bool {
 
 	return strings.HasPrefix(str, find)
 }
 
-//	strings.HasSuffix("ABC_xyz", "xyz")
+// strings.HasSuffix("ABC_xyz", "xyz")
 func EndsWith(str string, find string) bool {
 
 	return strings.HasSuffix(str, find)
 }
 
-//  strings.Count("cheese", "e") = 3
+// strings.Count("cheese", "e") = 3
 func Count(str string, find string) int {
 
 	return strings.Count(str, find)
 }
 
-//  返回第一个匹配字符的位置，返回-1为未找到
-//  strings.Index("ABC_xyz", "xyz") = 4
-//  strings.Index("ABC_xyz", "B") = 1
+// 返回第一个匹配字符的位置，返回-1为未找到
+// strings.Index("ABC_xyz", "xyz") = 4
+// strings.Index("ABC_xyz", "B") = 1
 func Index(str string, find string) int {
 
 	return strings.Index(str, find)
 }
 
-//strings.Join(arrays, ",") = "foo, bar, bas"
+// strings.Join(arrays, ",") = "foo, bar, bas"
 func Join(strs []string, spChar string) string {
 
 	return strings.Join(strs, spChar)
@@ -1214,15 +1214,15 @@ func IntArrayJoin(array []int, spChar string) string {
 	return buffer.String()
 }
 
-//  字母转为小写
-//  strings.ToLower("Love GoLang") = "love golang"
+// 字母转为小写
+// strings.ToLower("Love GoLang") = "love golang"
 func ToLower(str string) string {
 
 	return strings.ToLower(str)
 }
 
-//  字母转为大写
-//  strings.ToTitle("love 中国") = "LOVE 中国"
+// 字母转为大写
+// strings.ToTitle("love 中国") = "LOVE 中国"
 func ToUpper(str string) string {
 	return strings.ToUpper(str)
 	//return strings.ToTitle(str)
@@ -1310,7 +1310,7 @@ func IsEMail(input string) bool {
 	return match
 }
 
-//高效拼接字符串
+// 高效拼接字符串
 func LinkStrs(inputs ...string) string {
 	var buf bytes.Buffer
 	for _, v := range inputs {
