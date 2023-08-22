@@ -10,10 +10,12 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"math/rand"
 	"net/url"
 	"os"
+	"os/exec"
 	"reflect"
 	"regexp"
 	"runtime"
@@ -740,6 +742,114 @@ func StartProcessDemo() {
 	time.Sleep(10000)
 	p.Signal(os.Kill)
 	os.Exit(10)
+}
+
+func ExecCmd() {
+
+	//out, err := CmdAndChangeDir("d:\\", "cmd.exe", []string{"/C", "dir"})
+	//out, err := CmdAndChangeDir("d:\\", "cmd.exe", []string{"/C", "test.bat"})
+	out, err := CmdAndChangeDir("/tmp", "/bin/bash", []string{"-c", "usermod -G root faas"})
+	fmt.Println(err)
+	fmt.Println("out：", out)
+}
+
+func CmdAndChangeDir(dir string, commandName string, params []string) (string, error) {
+	cmd := exec.Command(commandName, params...)
+	fmt.Println("CmdAndChangeDir", dir, cmd.Args)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = os.Stderr
+	//不需要切换目录执行命令，这里不需要设置
+	cmd.Dir = dir
+	err := cmd.Start()
+	if err != nil {
+		return "", err
+	}
+	err = cmd.Wait()
+	return out.String(), err
+}
+
+func ChangePwd() {
+	fmt.Println("passwd root")
+	cmd := exec.Command("passwd", "root")
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	in := bytes.NewBuffer(nil)
+	cmd.Stdin = in
+
+	in.WriteString("123456\n")
+	in.WriteString("123456\n")
+
+	err := cmd.Start()
+	if err != nil {
+		fmt.Println("cmd.Start err:", err)
+	}
+	err = cmd.Wait()
+	fmt.Println(err)
+	fmt.Println(out.String())
+}
+
+func StartExec_Demo1() {
+	cmd := exec.Command("sleep", "1")
+	log.Printf("Running command and waiting for it to finish...")
+	err := cmd.Run()
+	log.Printf("Command finished with error: %v", err)
+}
+
+func StartExec_Demo2() {
+	cmd := exec.Command("tr", "a-z", "A-Z")
+	cmd.Stdin = strings.NewReader("some input")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("in all caps: %q\n", out.String())
+}
+
+func StartExec_Demo3() {
+	cmd := exec.Command("prog")
+	cmd.Env = append(os.Environ(),
+		"FOO=duplicate_value", // ignored
+		"FOO=actual_value",    // this value is used
+	)
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func StartExec_Demo4() {
+
+	cmd := exec.Command("echo", "-n", `{"Name": "Bob", "Age": 32}`)
+
+	/*
+		if runtime.GOOS == "windows" {
+			cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+		}
+	*/
+
+	err := cmd.Run()
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+	var person struct {
+		Name string
+		Age  int
+	}
+	if err := json.NewDecoder(stdout).Decode(&person); err != nil {
+		log.Fatal(err)
+	}
+	if err := cmd.Wait(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s is %d years old\n", person.Name, person.Age)
 }
 
 func ToJson(obj interface{}) ([]byte, error) {
