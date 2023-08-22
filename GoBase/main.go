@@ -778,6 +778,7 @@ func ChangePwd() {
 	in := bytes.NewBuffer(nil)
 	cmd.Stdin = in
 
+	//改密码需要输入两次 "\n"表示回车
 	in.WriteString("123456\n")
 	in.WriteString("123456\n")
 
