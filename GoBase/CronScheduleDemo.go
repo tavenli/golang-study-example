@@ -20,6 +20,7 @@ func TestSchedule(t *testing.T) {
 		? 问号可以用于月日和星期字段。用于指定“无特定值”。当您需要在这两个字段中的一个字段中指定某些内容，而不是另一个字段时，这很有用。
 	*/
 
+	//jobCronMain.AddFunc("0/10 * * * * ?", SayHello)
 	//jobCronMain.AddFunc("0 0 8 * * *", EveryDayHello)
 	//jobCronMain.AddFunc("0 0 9 * * *", CheckWsClientOnline)
 	//jobCronMain.AddFunc("0 0 15 * * *", CheckWsClientOnline)
