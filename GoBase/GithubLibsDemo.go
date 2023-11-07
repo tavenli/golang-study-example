@@ -118,14 +118,14 @@ func resty_main() {
 	resp, err = client.R().
 		SetBody(UserData{UserId: 1111, UserName: "testpass"}).
 		SetResult(&UserData{}). // or SetResult(AuthSuccess{}).
-		SetError(&UserData{}). // or SetError(AuthError{}).
+		SetError(&UserData{}).  // or SetError(AuthError{}).
 		Post("https://myapp.com/login")
 
 	// POST Map, default is JSON content type. No need to set one
 	resp, err = client.R().
 		SetBody(map[string]interface{}{"username": "testuser", "password": "testpass"}).
 		SetResult(&UserData{}). // or SetResult(AuthSuccess{}).
-		SetError(&UserData{}). // or SetError(AuthError{}).
+		SetError(&UserData{}).  // or SetError(AuthError{}).
 		Post("https://myapp.com/login")
 
 	// POST of raw bytes for file upload. For example: upload file to Dropbox
@@ -136,7 +136,7 @@ func resty_main() {
 		SetBody(fileBytes).
 		SetContentLength(true). // Dropbox expects this value
 		SetAuthToken("<your-auth-token>").
-		SetError(&UserData{}). // or SetError(DropboxError{}).
+		SetError(&UserData{}).                                                       // or SetError(DropboxError{}).
 		Post("https://content.dropboxapi.com/1/files_put/auto/resty/mydocument.pdf") // for upload Dropbox supports PUT too
 
 }
