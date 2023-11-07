@@ -1,7 +1,6 @@
 package main
 
 import (
-	"GoBase/utils"
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
@@ -13,7 +12,6 @@ import (
 	"log"
 	"math"
 	"math/rand"
-	"net/url"
 	"os"
 	"os/exec"
 	"reflect"
@@ -90,22 +88,22 @@ func main() {
 
 	ShowSysInf()
 
-	GoLangInitObj()
+	//GoLangInitObj()
 
-	demo_string()
+	//demo_string()
 
 	//单例模式
-	GetInstance3().Eat()
+	//GetInstance3().Eat()
 
-	HangUp_Main_Demo5()
+	//HangUp_Main_Demo5()
 
 	//TestSnowflakeGen()
 
 	//Service_Main()
 
-	GenericDemo()
+	//GenericDemo()
 
-	demo_array_op()
+	//demo_array_op()
 
 	//TimeTicker()
 
@@ -115,21 +113,21 @@ func main() {
 
 	//GoRoutinePool_main()
 
-	urlParam1 := "~!@#$&*()=:/,;?+'"
-	result1 := url.QueryEscape(urlParam1)
-	fmt.Println(result1)
-	fmt.Println(url.QueryUnescape(result1))
+	//urlParam1 := "~!@#$&*()=:/,;?+'"
+	//result1 := url.QueryEscape(urlParam1)
+	//fmt.Println(result1)
+	//fmt.Println(url.QueryUnescape(result1))
 
 	//默认是UTF-8编码
-	urlParam2 := "我爱北京天安门"
-	result2 := url.QueryEscape(urlParam2)
-	fmt.Println(result2)
-	fmt.Println(url.QueryUnescape(result2))
+	//urlParam2 := "我爱北京天安门"
+	//result2 := url.QueryEscape(urlParam2)
+	//fmt.Println(result2)
+	//fmt.Println(url.QueryUnescape(result2))
 
-	result, err := utils.HttpRequestRaw("payload.txt", true)
-	fmt.Println(result, err)
+	//result, err := utils.HttpRequestRaw("payload.txt", true)
+	//fmt.Println(result, err)
 
-	fmt.Println("==========================")
+	//fmt.Println("==========================")
 
 	//FormatPlaceHolder_main()
 
@@ -138,6 +136,8 @@ func main() {
 	//HttpServer2_main()
 
 	//HttpClient2_Proxy_main()
+
+	GithubLibs_main()
 
 }
 
