@@ -6,9 +6,13 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
+	"path"
 	"strings"
+	"time"
 
 	"bytes"
 
@@ -31,8 +35,90 @@ func GetIP(c *beego.Controller) string {
 	return ip
 }
 
-func HttpPostJson(url string, json string) (string, error) {
-	resp, err := http.Post(url, "application/json", strings.NewReader(json))
+func HttpGet(url string) (string, error) {
+
+	resp, err := http.Get(url)
+	if err != nil {
+		logs.Error("HttpGet error: ", err)
+		return "", err
+	}
+
+	if resp == nil {
+		return "", errors.New("返回对象为空")
+	}
+
+	defer resp.Body.Close()
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		logs.Debug("HttpGet result: ", result)
+	} else {
+		logs.Error("HttpGet error: ", err)
+	}
+
+	return result, nil
+}
+
+func HttpSimpleGet(reqUrl string) (response string) {
+	client := http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Get(reqUrl)
+
+	defer resp.Body.Close()
+
+	if err != nil {
+		logs.Error("HttpGet error: ", err)
+		return ""
+	}
+
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		//logs.Debug("HttpGet result: ", result)
+	} else {
+		logs.Error("HttpGet error: ", err)
+	}
+
+	return result
+}
+
+func HttpGet2(reqUrl string, headerParam map[string]string) (response string, err error) {
+	req, err := http.NewRequest("GET", reqUrl, nil)
+	if err != nil {
+		logs.Error("HttpGet error: ", err)
+		return "", err
+	}
+
+	for k, v := range headerParam {
+		req.Header.Set(k, v)
+	}
+
+	//resp, err := http.DefaultClient.Do(req)
+	client := http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Do(req)
+
+	if err != nil {
+		logs.Error("HttpGet error: ", err)
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		//logs.Debug("HttpGet result: ", result)
+	} else {
+		logs.Error("HttpGet error: ", err)
+	}
+
+	return result, nil
+}
+
+func HttpPostJson(reqUrl string, json string) (string, error) {
+	resp, err := http.Post(reqUrl, "application/json", strings.NewReader(json))
 	if err != nil {
 		logs.Error("HttpPostJson error: ", err)
 		return "", err
@@ -55,8 +141,8 @@ func HttpPostJson(url string, json string) (string, error) {
 	return result, nil
 }
 
-func HttpPostJsonReturnByte(url string, json string) ([]byte, error) {
-	resp, err := http.Post(url, "application/json", strings.NewReader(json))
+func HttpPostJsonReturnByte(reqUrl string, json string) ([]byte, error) {
+	resp, err := http.Post(reqUrl, "application/json", strings.NewReader(json))
 	if err != nil {
 		logs.Error("HttpPostJson error: ", err)
 		return nil, err
@@ -110,6 +196,74 @@ func HttpPost(url string, param map[string]string) (string, error) {
 	return result, nil
 }
 
+func HttpPost2(reqUrl string, param url.Values, headerParam map[string]string) (string, error) {
+
+	req, err := http.NewRequest("POST", reqUrl, strings.NewReader(param.Encode()))
+
+	if err != nil {
+		logs.Error("HttpPost error: ", err)
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	for k, v := range headerParam {
+		req.Header.Set(k, v)
+	}
+
+	//resp, err := http.DefaultClient.Do(req)
+	client := http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Do(req)
+
+	if err != nil {
+		logs.Error("HttpPost error: ", err)
+		return "", err
+	}
+
+	defer resp.Body.Close()
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		logs.Debug("HttpPost result: ", result)
+	} else {
+		logs.Error("HttpPost error: ", err)
+	}
+
+	return result, nil
+
+}
+
+func HttpSimplePost(reqUrl string, param map[string]string) (string, error) {
+
+	values := url.Values{}
+	for k, v := range param {
+		values.Set(k, v)
+	}
+
+	resp, err := http.Post(reqUrl, "application/x-www-form-urlencoded", strings.NewReader(values.Encode()))
+	if err != nil {
+		logs.Error("HttpSimplePost error: ", err)
+		return "", err
+	}
+
+	if resp == nil {
+		return "", errors.New("返回对象为空")
+	}
+
+	defer resp.Body.Close()
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		logs.Debug("HttpSimplePost result: ", result)
+	} else {
+		logs.Error("HttpSimplePost error: ", err)
+	}
+
+	return result, nil
+}
+
 func HttpRequestRaw(filePath string, https bool) (string, error) {
 	client := &http.Client{}
 
@@ -158,4 +312,164 @@ func UrlDecode(input string) string {
 	} else {
 		return result
 	}
+}
+
+func HttpGet3(reqUrl string, headerParam map[string]string) (response string, err error) {
+	req, err := http.NewRequest("GET", reqUrl, nil)
+	if err != nil {
+		logs.Error("HttpGet error: ", err)
+		return "", err
+	}
+
+	for k, v := range headerParam {
+		req.Header.Set(k, v)
+	}
+
+	//resp, err := http.DefaultClient.Do(req)
+	client := http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Do(req)
+
+	if err != nil {
+		logs.Error("HttpGet error: ", err)
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		//logs.Debug("HttpGet result: ", result)
+	} else {
+		logs.Error("HttpGet error: ", err)
+	}
+
+	return result, nil
+}
+
+func HttpDownload(reqUrl string, toPath string) bool {
+	res, err := http.Get(reqUrl)
+	if err != nil {
+		logs.Error("下载资源出错：", err)
+		return false
+	}
+	fmt.Println("res.StatusCode", res.StatusCode)
+
+	workPath, _ := os.Getwd()
+	fullPath := workPath + "/" + toPath
+	os.MkdirAll(path.Dir(fullPath), os.ModePerm)
+	file, err2 := os.Create(fullPath)
+	if err2 != nil {
+		logs.Error("下载资源出错：", err2)
+		return false
+	}
+
+	_, err3 := io.Copy(file, res.Body)
+	if err3 != nil {
+		logs.Error("下载资源出错：", err3)
+		return false
+	}
+
+	logs.Debug("下载完成：", fullPath)
+	return true
+}
+
+func HttpSimplePostFile(reqUrl string, param map[string]string, fieldName, filePath string) (string, error) {
+
+	bodyBuffer := &bytes.Buffer{}
+	bodyWriter := multipart.NewWriter(bodyBuffer)
+
+	//上传单个文件，如果上传多个文件可重复该段逻辑
+	fileWriter, _ := bodyWriter.CreateFormFile(fieldName, FileFullName(filePath))
+	file, _ := os.Open(filePath)
+	defer file.Close()
+	io.Copy(fileWriter, file)
+
+	//如果同时含有表单参数
+	for k, v := range param {
+		_ = bodyWriter.WriteField(k, v)
+	}
+
+	contentType := bodyWriter.FormDataContentType()
+	bodyWriter.Close()
+
+	resp, err := http.Post(reqUrl, contentType, bodyBuffer)
+	if err != nil {
+		logs.Error("HttpPost error: ", err)
+		return "", err
+	}
+
+	if resp == nil {
+		return "", errors.New("返回对象为空")
+	}
+
+	defer resp.Body.Close()
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		logs.Debug("HttpPost result: ", result)
+	} else {
+		logs.Error("HttpPost error: ", err)
+	}
+
+	return result, nil
+
+}
+
+func HttpPostFile(reqUrl string, param url.Values, headerParam map[string]string, fieldName, filePath string) (string, error) {
+
+	bodyBuffer := &bytes.Buffer{}
+	bodyWriter := multipart.NewWriter(bodyBuffer)
+
+	//上传单个文件，如果上传多个文件可重复该段逻辑
+	fileWriter, _ := bodyWriter.CreateFormFile(fieldName, FileFullName(filePath))
+	file, _ := os.Open(filePath)
+	defer file.Close()
+	io.Copy(fileWriter, file)
+
+	//如果同时含有表单参数
+	for k, v := range param {
+		for _, _v := range v {
+			_ = bodyWriter.WriteField(k, _v)
+		}
+	}
+
+	contentType := bodyWriter.FormDataContentType()
+	bodyWriter.Close()
+
+	req, err := http.NewRequest("POST", reqUrl, bodyBuffer)
+
+	if err != nil {
+		logs.Error("HttpPostFile error: ", err)
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", contentType)
+
+	for k, v := range headerParam {
+		req.Header.Set(k, v)
+	}
+
+	//resp, err := http.DefaultClient.Do(req)
+	client := http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		logs.Error("HttpPostFile error: ", err)
+		return "", err
+	}
+
+	defer resp.Body.Close()
+	result := ""
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		result = string(body)
+		logs.Debug("HttpPostFile result: ", result)
+	} else {
+		logs.Error("HttpPostFile error: ", err)
+	}
+
+	return result, nil
+
 }
