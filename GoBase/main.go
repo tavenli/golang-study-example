@@ -88,7 +88,7 @@ func main() {
 
 	ShowSysInf()
 
-	//GoLangInitObj()
+	GoLangInitObj()
 
 	//demo_string()
 
@@ -137,7 +137,9 @@ func main() {
 
 	//HttpClient2_Proxy_main()
 
-	GithubLibs_main()
+	//GithubLibs_main()
+
+	HtmlTemplate_main()
 
 }
 
@@ -237,7 +239,22 @@ func GoLangInitObj() {
 
 	userData6 := UserData{UserId: 1, UserName: "taven"}
 
-	fmt.Println(userData1, userData2, userData3, userData4, userData5, userData6)
+	userData7 := new([]*UserData) //不推荐的使用方式
+
+	userData8 := make([]*UserData, 10)
+
+	var userData9 []*UserData
+
+	userData9 = append(userData9, userData1)
+
+	fmt.Println(userData1, userData2, userData3, userData4, userData5, userData6, userData7, userData8, userData9)
+
+	/*
+		make用于内建类型（map、slice 和channel）的内存分配
+		new用于各种类型的内存分配
+
+		内建函数make(T, args)与new(T)有着不同的功能，make只能创建slice、map和channel，并且返回一个有初始值(非零)的T类型，而不是*T
+	*/
 
 	//制造异常
 	err := errors.New("这是一个异常")
