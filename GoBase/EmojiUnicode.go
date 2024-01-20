@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoBase/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -12,6 +13,8 @@ import (
 https://www.w3school.com.cn/charsets/ref_emoji_smileys.asp
 
 https://tool.chinaz.com/Tools/unicode.aspx
+
+https://github.com/matrix-org/gomatrixserverlib/blob/14ee7615d6041e851658f2f46057f81738a49d69/json_test.go
 
 其它语言使用的方式，如Java、NodeJs
 \u6211\u7231\u4e2d\u56fd\ud83d\udd25\u6C38\u65E0\u6B62\u5883\uD83D\uDD25
@@ -56,6 +59,15 @@ func NormalUnicode() {
 
 	fmt.Println(UnicodeEmojiCode("🔥永无止境🔥"))
 
+	var jsonMap map[string]interface{}
+	json := []byte(`{"Emoji":"Hi,\u261d \u6211\u7231\u4e2d\u56fd\ud83d\udd25\u6C38\u65E0\u6B62\u5883\uD83D\uDD25"}`)
+	utils.FromJson(json, &jsonMap)
+	fmt.Println(jsonMap)
+	for k, v := range jsonMap {
+		fmt.Println(k, v)
+	}
+
+	fmt.Println("-------------")
 }
 
 // 表情解码
