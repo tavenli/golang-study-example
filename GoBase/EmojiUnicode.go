@@ -60,14 +60,23 @@ func NormalUnicode() {
 	fmt.Println(UnicodeEmojiCode("🔥永无止境🔥"))
 
 	var jsonMap map[string]interface{}
-	json := []byte(`{"Emoji":"Hi,\u261d \u6211\u7231\u4e2d\u56fd\ud83d\udd25\u6C38\u65E0\u6B62\u5883\uD83D\uDD25"}`)
+	json := []byte(`{"Msg":"Hi,\u261d \u6211\u7231\u4e2d\u56fd\ud83d\udd25\u6C38\u65E0\u6B62\u5883\uD83D\uDD25"}`)
 	utils.FromJson(json, &jsonMap)
 	fmt.Println(jsonMap)
 	for k, v := range jsonMap {
 		fmt.Println(k, v)
 	}
 
+	emojiMsg := new(EmojiMsg)
+	json2 := []byte(`{"Msg":"Hi,\u261d \u6211\u7231\u4e2d\u56fd\ud83d\udd25\u6C38\u65E0\u6B62\u5883\uD83D\uDD25"}`)
+	utils.FromJson(json2, emojiMsg)
+	fmt.Println(emojiMsg)
+
 	fmt.Println("-------------")
+}
+
+type EmojiMsg struct {
+	Msg string
 }
 
 // 表情解码
