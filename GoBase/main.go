@@ -139,7 +139,9 @@ func main() {
 
 	//GithubLibs_main()
 
-	HtmlTemplate_main()
+	//HtmlTemplate_main()
+
+	EmojiUnicode_main()
 
 }
 
