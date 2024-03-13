@@ -141,7 +141,9 @@ func main() {
 
 	//HtmlTemplate_main()
 
-	EmojiUnicode_main()
+	//EmojiUnicode_main()
+
+	CallbackFunc_main()
 
 }
 
