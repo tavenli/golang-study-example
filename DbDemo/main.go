@@ -7,11 +7,16 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 )
 
 /**
 CRUD Operations
 https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/
+
+BSON Specification
+https://bsonspec.org/spec.html
+go.mongodb.org/mongo-driver/bson/bsontype
 
 */
 
@@ -21,7 +26,9 @@ func main() {
 	MongoDbDemo1()
 	MongoDbDemo2()
 	MongoDbDemo3()
-
+	//MongoDbDemo4()
+	//MongoDbDemo5()
+	MongoDbDemo6()
 }
 
 func MongoDbDemo1() {
@@ -52,9 +59,10 @@ func MongoDbDemo1() {
 func MongoDbDemo2() {
 	uri := "mongodb://127.0.0.1:27017"
 	credential := options.Credential{
-		AuthSource: "<authenticationDb>",
-		Username:   "<username>",
-		Password:   "<password>",
+		AuthMechanism: "SCRAM-SHA-256",
+		AuthSource:    "<authenticationDb>",
+		Username:      "<username>",
+		Password:      "<password>",
 	}
 	clientOpts := options.Client().ApplyURI(uri).
 		SetAuth(credential)
@@ -143,15 +151,111 @@ func MongoDbDemo3() {
 
 }
 
+func MongoDbDemo4() {
+
+	uri := "mongodb://127.0.0.1:27017"
+	opts := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(context.TODO(), opts)
+	fmt.Println(client, err)
+	defer client.Disconnect(context.TODO())
+	coll := client.Database("DbDemo1").Collection("articles")
+
+	indexModel := mongo.IndexModel{
+		Keys: bson.D{
+			{"fullplot", -1},
+			{"title", 1},
+		},
+	}
+	name, err := coll.Indexes().CreateOne(context.TODO(), indexModel)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Name of Index Created: " + name)
+}
+
+func MongoDbDemo5() {
+	//MongoDB 的事务只能在开启副本集的时候才能使用，Windows 上的 MongoDB 安装后默认是单副本。
+	//开启多副本需要修改mongod的配置文件，然后重新启动服务
+	//Transaction numbers are only allowed on a replica set member or mongos
+
+	uri := "mongodb://127.0.0.1:27017"
+	opts := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(context.TODO(), opts)
+	fmt.Println(client, err)
+	defer client.Disconnect(context.TODO())
+	coll := client.Database("DbDemo1").Collection("articles")
+
+	wc := writeconcern.Majority()
+	txnOptions := options.Transaction().SetWriteConcern(wc)
+
+	// Starts a session on the client
+	session, err := client.StartSession()
+	if err != nil {
+		panic(err)
+	}
+	// Defers ending the session after the transaction is committed or ended
+	defer session.EndSession(context.TODO())
+
+	// Inserts multiple documents into a collection within a transaction,
+	// then commits or ends the transaction
+	result, err := session.WithTransaction(context.TODO(), func(ctx mongo.SessionContext) (interface{}, error) {
+		_result, _err := coll.InsertMany(ctx, []interface{}{
+			bson.D{{"title", "The Bluest Eye"}, {"author", "Toni Morrison"}},
+			bson.D{{"title", "Sula"}, {"author", "Toni Morrison"}},
+			bson.D{{"title", "Song of Solomon"}, {"author", "Toni Morrison"}},
+		})
+		//Transaction numbers are only allowed on a replica set member or mongos
+		fmt.Println(_result, _err)
+		return _result, _err
+	}, txnOptions)
+
+	//session.AbortTransaction(context.TODO())
+	//session.CommitTransaction(context.TODO())
+	//session.AbortTransaction(context.Background())
+	//session.CommitTransaction(context.Background())
+
+	fmt.Printf("Inserted _id values: %v\n", result)
+}
+
+func MongoDbDemo6() {
+
+	uri := "mongodb://127.0.0.1:27017"
+	opts := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(context.TODO(), opts)
+	fmt.Println(client, err)
+
+	coll := client.Database("DbDemo1").Collection("userinfo")
+	userInfo := UserInfo{101, "u100", 20, 3.14, ""}
+	res, err := coll.InsertOne(context.TODO(), userInfo)
+	fmt.Println(res.InsertedID, err)
+
+}
+
 type Address struct {
 	Street string
 	City   string
 	State  string
 }
 
+/**
+
+BSON 的 Struct Tag
+https://www.mongodb.com/docs/drivers/go/current/fundamentals/bson/
+omitempty、minsize、truncate、inline
+*/
+
 type Student struct {
 	FirstName string  `bson:"first_name,omitempty"`
 	LastName  string  `bson:"last_name,omitempty"`
 	Address   Address `bson:"inline"`
 	Age       int
+}
+
+type UserInfo struct {
+	UId      int64   `bson:"_id,omitempty"`
+	UserName string  `bson:"userName,omitempty"`
+	Age      int32   `bson:"age,minsize"`
+	Num1     float32 `bson:"num1,truncate"`
+	Desc     string  `bson:"desc"`
 }
