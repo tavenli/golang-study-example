@@ -19,13 +19,31 @@ var silent = true
 
 func init() {
 
-	hook := lumberjack.Logger{
+	debugFile := lumberjack.Logger{
 		//Filename:   path.Join("logs", time.Now().Format("2006-01-02")+".log"), // 日志文件路径
-		Filename:   path.Join("logs", "app.log"), // 日志文件路径
-		MaxSize:    100,                          // 每个日志文件保存的最大尺寸 单位：M
-		MaxBackups: 50,                           // 日志文件最多保存多少个备份
-		MaxAge:     7,                            // 文件最多保存多少天
-		Compress:   false,                        // 是否压缩
+		Filename:   path.Join("logs", "debug.log"), // 日志文件路径
+		MaxSize:    1000,                           // 每个日志文件保存的最大尺寸 单位：M
+		MaxBackups: 50,                             // 日志文件最多保存多少个备份
+		MaxAge:     7,                              // 文件最多保存多少天
+		Compress:   false,                          // 是否压缩
+		LocalTime:  true,
+	}
+
+	infoFile := lumberjack.Logger{
+		Filename:   path.Join("logs", "info.log"),
+		MaxSize:    1000,
+		MaxBackups: 50,
+		MaxAge:     7,
+		Compress:   false,
+		LocalTime:  true,
+	}
+
+	errorFile := lumberjack.Logger{
+		Filename:   path.Join("logs", "error.log"),
+		MaxSize:    1000,
+		MaxBackups: 50,
+		MaxAge:     7,
+		Compress:   false,
 		LocalTime:  true,
 	}
 
@@ -39,20 +57,47 @@ func init() {
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder, // 小写编码器
 		EncodeTime:     CustomTimeEncoder,
-		EncodeDuration: zapcore.SecondsDurationEncoder, //
-		EncodeCaller:   zapcore.FullCallerEncoder,      // 全路径编码器
+		EncodeDuration: zapcore.StringDurationEncoder, //
+		EncodeCaller:   zapcore.ShortCallerEncoder,    // 路径编码器
 		EncodeName:     zapcore.FullNameEncoder,
 	}
 
-	// 设置日志级别
-	atomicLevel := zap.NewAtomicLevel()
-	atomicLevel.SetLevel(zap.DebugLevel)
+	/**
+	EncodeDuration:
+		zapcore.StringDurationEncoder
+		zapcore.SecondsDurationEncoder
+	EncodeCaller:
+		zapcore.ShortCallerEncoder
+		zapcore.FullCallerEncoder
+	*/
 
-	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(encoderConfig),                                           // 编码器配置
-		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)), // 打印到控制台和文件
-		atomicLevel, // 日志级别
-	)
+	// 设置日志级别
+
+	debugLogLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= zapcore.DebugLevel
+	})
+	infoLogLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl == zapcore.InfoLevel
+	})
+	errorLogLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl == zapcore.ErrorLevel
+	})
+
+	//debugLogWriter := zapcore.AddSync(os.Stdout)
+	//infoLogWriter := zapcore.AddSync(os.Stdout)
+	//errorLogWriter := zapcore.AddSync(os.Stderr)
+
+	debugLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&debugFile))
+	infoLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&infoFile))
+	errorLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stderr), zapcore.AddSync(&errorFile))
+
+	debugLogEncoder := zapcore.NewJSONEncoder(encoderConfig)
+	infoLogEncoder := zapcore.NewJSONEncoder(encoderConfig)
+	errorLogEncoder := zapcore.NewJSONEncoder(encoderConfig)
+
+	debugLogCore := zapcore.NewCore(debugLogEncoder, debugLogWriter, debugLogLevel)
+	infoLogCore := zapcore.NewCore(infoLogEncoder, infoLogWriter, infoLogLevel)
+	errorLogCore := zapcore.NewCore(errorLogEncoder, errorLogWriter, errorLogLevel)
 
 	// 开启开发模式，堆栈跟踪
 	caller := zap.AddCaller()
@@ -66,7 +111,9 @@ func init() {
 
 	// 构造日志
 	//log = zap.New(core, caller, development, filed)
-	log = zap.New(core, caller, development, filed, zap.AddCallerSkip(1))
+	//log = zap.New(core, caller, development, filed, zap.AddCallerSkip(1))
+	//组合多个 core 成为 logger
+	log = zap.New(zapcore.NewTee(debugLogCore, infoLogCore, errorLogCore), caller, development, filed, zap.AddCallerSkip(1))
 
 	//fmt.Println("log 初始化成功")
 
