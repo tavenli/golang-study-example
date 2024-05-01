@@ -88,8 +88,12 @@ func init() {
 	//errorLogWriter := zapcore.AddSync(os.Stderr)
 
 	debugLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&debugFile))
-	infoLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&infoFile))
-	errorLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stderr), zapcore.AddSync(&errorFile))
+	//infoLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&infoFile))
+	//errorLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stderr), zapcore.AddSync(&errorFile))
+
+	//当设置 lvl >= zapcore.DebugLevel 时，debug 输出到控制台，并且会打印所有高于 Debug 的级别，所以其它级别不需要再重复输出到控制台
+	infoLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(&infoFile))
+	errorLogWriter := zapcore.NewMultiWriteSyncer(zapcore.AddSync(&errorFile))
 
 	debugLogEncoder := zapcore.NewJSONEncoder(encoderConfig)
 	infoLogEncoder := zapcore.NewJSONEncoder(encoderConfig)
