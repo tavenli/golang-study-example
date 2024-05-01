@@ -15,7 +15,7 @@ import (
 var log *zap.Logger
 
 // 日志是否静默状态
-var silent = true
+var silent = false
 
 func init() {
 

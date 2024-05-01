@@ -14,6 +14,13 @@ import (
 
 func main() {
 
+	fmt.Println(aurora.BrightGreen("Loggers_Demo"))
+	fmt.Println(aurora.BrightRed("Loggers_Demo"))
+	fmt.Println(aurora.BrightBlue("Loggers_Demo"))
+	fmt.Println(aurora.BrightCyan("Loggers_Demo"))
+	fmt.Println(aurora.BrightYellow("Loggers_Demo"))
+	fmt.Println(aurora.BrightMagenta("Loggers_Demo"))
+
 	//
 	//logger_demo1()
 
@@ -22,6 +29,8 @@ func main() {
 
 func logger_demo1() {
 	var acolor = aurora.NewAurora(true)
+
+	fmt.Println(aurora.BrightGreen("hello"))
 
 	gologger.DefaultLogger.SetMaxLevel(levels.LevelDebug)
 	//	gologger.DefaultLogger.SetFormatter(&formatter.JSON{})
