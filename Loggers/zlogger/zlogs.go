@@ -126,22 +126,19 @@ func Debug(f interface{}, v ...interface{}) {
 	log.Debug(getFormatMsg(f, v...))
 }
 
-func Error(f interface{}, v ...interface{}) {
+func Debugs(args ...interface{}) {
 	if silent == true {
 		return
 	}
-	log.Error(getFormatMsg(f, v...))
+	log.Debug(fmt.Sprint(args...))
+	//log.Sugar().Debug(args...)
 }
 
-func Panic(f interface{}, v ...interface{}) {
-	log.Panic(getFormatMsg(f, v...))
-}
-
-func Warn(f interface{}, v ...interface{}) {
+func DebugZ(msg string, fields ...zap.Field) {
 	if silent == true {
 		return
 	}
-	log.Warn(getFormatMsg(f, v...))
+	log.Debug(msg, fields...)
 }
 
 func Info(f interface{}, v ...interface{}) {
@@ -151,12 +148,36 @@ func Info(f interface{}, v ...interface{}) {
 	log.Info(getFormatMsg(f, v...))
 }
 
-func Debugs(args ...interface{}) {
+func InfoZ(msg string, fields ...zap.Field) {
 	if silent == true {
 		return
 	}
-	log.Debug(fmt.Sprint(args...))
-	//log.Sugar().Debug(args...)
+	log.Info(msg, fields...)
+}
+
+func Warn(f interface{}, v ...interface{}) {
+	if silent == true {
+		return
+	}
+	log.Warn(getFormatMsg(f, v...))
+}
+
+func Error(f interface{}, v ...interface{}) {
+
+	log.Error(getFormatMsg(f, v...))
+}
+
+func Errors(msg string, e error) {
+
+	log.Error(msg, zap.Error(e))
+}
+
+func ErrorZ(msg string, fields ...zap.Field) {
+	log.Error(msg, fields...)
+}
+
+func Panic(f interface{}, v ...interface{}) {
+	log.Panic(getFormatMsg(f, v...))
 }
 
 func getFormatMsg(f interface{}, v ...interface{}) string {
@@ -178,31 +199,6 @@ func getFormatMsg(f interface{}, v ...interface{}) string {
 	}
 	msg += strings.Repeat(" %v", len(v))
 	return fmt.Sprintf(msg, v...)
-}
-
-func DebugZ(msg string, fields ...zap.Field) {
-	if silent == true {
-		return
-	}
-	log.Debug(msg, fields...)
-}
-
-func Errors(msg string, e error) {
-	if silent == true {
-		return
-	}
-	log.Error(msg, zap.Error(e))
-}
-
-func ErrorZ(msg string, fields ...zap.Field) {
-	log.Error(msg, fields...)
-}
-
-func InfoZ(msg string, fields ...zap.Field) {
-	if silent == true {
-		return
-	}
-	log.Info(msg, fields...)
 }
 
 func Sync() error {

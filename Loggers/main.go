@@ -68,4 +68,6 @@ func zlogger_demo1() {
 	zlogger.Info("---------")
 	zlogger.Error("err:", zap.Error(err))
 	zlogger.Errors("Logger error", err)
+
+	defer zlogger.Sync()
 }
