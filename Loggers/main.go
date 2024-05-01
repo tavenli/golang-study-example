@@ -1,18 +1,23 @@
 package main
 
 import (
+	"Loggers/zlogger"
+	"errors"
 	"fmt"
 	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
+	"go.uber.org/zap"
 	"strconv"
+	"time"
 )
 
 func main() {
 
 	//
-	logger_demo1()
+	//logger_demo1()
 
+	zlogger_demo1()
 }
 
 func logger_demo1() {
@@ -47,4 +52,20 @@ func logger_demo1() {
 	gologger.Info().Msgf("Current httpx version %v", fmt.Sprintf("(%v)", acolor.BrightGreen("latest3")))
 
 	fmt.Println("----------------")
+}
+
+func zlogger_demo1() {
+	action := "do loging"
+	zlogger.Info("开始运行", time.Now())
+	zlogger.ChangeSilent(false)
+
+	err := errors.New("some error")
+
+	zlogger.Debug("hi boys!")
+	zlogger.Debug("some format message %d ,the number you got it?", 100)
+	zlogger.DebugZ("some message", zap.String("action", action))
+	zlogger.Debugs("some words,", 100, time.Now())
+	zlogger.Info("---------")
+	zlogger.Error("err:", zap.Error(err))
+	zlogger.Errors("Logger error", err)
 }
