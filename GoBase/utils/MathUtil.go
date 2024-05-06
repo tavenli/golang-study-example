@@ -36,7 +36,7 @@ func Float64TryToInt64(num interface{}) int64 {
 	return int64(num.(float64))
 }
 
-//	返回最大值
+// 返回最大值
 func MaxInt(a, b int) int {
 	if a > b {
 		return a
@@ -44,7 +44,7 @@ func MaxInt(a, b int) int {
 	return b
 }
 
-//	返回最小值
+// 返回最小值
 func MinInt(a, b int) int {
 	if a < b {
 		return a
@@ -57,4 +57,12 @@ func Pages(total, psize int64) int64 {
 	pages := float64(total) / float64(psize)
 	result := math.Ceil(pages)
 	return int64(result)
+}
+
+func Pages2(pageSize int, totalRecords int) int {
+	totalPages := totalRecords / pageSize
+	if totalRecords%pageSize > 0 {
+		totalPages++
+	}
+	return totalPages
 }
