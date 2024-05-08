@@ -94,6 +94,10 @@ func MongoDbDemo3() {
 	err = coll.FindOne(context.TODO(), filter).Decode(&result)
 	fmt.Println(result, err)
 
+	var stu1 Address
+	err = coll.FindOne(context.TODO(), filter).Decode(&stu1)
+	fmt.Println(stu1, err)
+
 	filter = bson.D{{"age", bson.D{{"$gt", 20}}}}
 	cursor, err := coll.Find(context.TODO(), filter)
 	if err != nil {
@@ -254,7 +258,7 @@ type Student struct {
 
 type UserInfo struct {
 	UId      int64   `bson:"_id,omitempty"`
-	UserName string  `bson:"userName,omitempty"`
+	UserName string  `bson:"userName,omitempty" json:"userName"`
 	Age      int32   `bson:"age,minsize"`
 	Num1     float32 `bson:"num1,truncate"`
 	Desc     string  `bson:"desc"`
