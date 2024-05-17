@@ -4,6 +4,7 @@ import (
 	"Loggers/zlogger"
 	"errors"
 	"fmt"
+	"github.com/bytedance/sonic"
 	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
 	"github.com/projectdiscovery/gologger/levels"
@@ -22,9 +23,12 @@ func main() {
 	fmt.Println(aurora.BrightMagenta("Loggers_Demo"))
 
 	//
+	json_sonic()
+
 	//logger_demo1()
 
 	zlogger_demo1()
+
 }
 
 func logger_demo1() {
@@ -79,4 +83,28 @@ func zlogger_demo1() {
 	zlogger.Errors("Logger error", err)
 
 	defer zlogger.Sync()
+}
+
+type DemoStruct struct {
+	AccessKey string `json:"access_key"`
+	Data      string `json:"data"`
+}
+
+func json_sonic() {
+	var demoStruct DemoStruct
+
+	payload := `{"access_key":"abc","data":"sonic hello"}`
+	//payload := `{"access_key":"abc","secret_key":"123456","creator":"root2","creator_id":0}`
+	//payload := `{"access_key":"abc","secret_key":"123456","creator":"root2","creator_id":0,}`
+
+	// 这里没有进行输入验证，导致反序列化漏洞
+	err := sonic.Unmarshal([]byte(payload), &demoStruct)
+	if err != nil {
+		//zlogger.Errors("Logger error", err)
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(demoStruct.Data)
+
 }
