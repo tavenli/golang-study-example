@@ -485,9 +485,15 @@ func demo_collection() {
 	mvalue, contain := map1["one"]
 	fmt.Println(mvalue, contain)
 
+	// 遍历map
+	for key, value := range map1 {
+		fmt.Println("Key:", key, "Value:", value)
+	}
+
 	//判断key是否存在
-	if _, ok := map1["one"]; ok {
+	if val, ok := map1["one"]; ok {
 		//存在
+		fmt.Println(val)
 	}
 
 	fmt.Println(map1, len(map1))
