@@ -218,8 +218,10 @@ func zap_logger_demo5() {
 	}
 
 	// 设置日志级别
-	atomicLevel := zap.NewAtomicLevel()
-	atomicLevel.SetLevel(zap.DebugLevel)
+	atomicLevel := zap.NewAtomicLevelAt(zap.DebugLevel)
+
+	//atomicLevel := zap.NewAtomicLevel()
+	//atomicLevel.SetLevel(zap.DebugLevel)
 
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConfig),                // 编码器配置
@@ -227,10 +229,10 @@ func zap_logger_demo5() {
 		atomicLevel,                                             // 日志级别
 	)
 
-	// 开启开发模式，堆栈跟踪
+	// 记录 对应源码文件及行号
 	caller := zap.AddCaller()
 
-	// 开启文件及行号
+	// 开启开发模式，会记录 DPanic-level
 	//development := zap.Development()
 
 	trace := zap.AddStacktrace(zap.ErrorLevel)
@@ -293,19 +295,25 @@ func zap_logger_demo6() {
 	}
 
 	// 设置日志级别
-	atomicLevel := zap.NewAtomicLevel()
-	atomicLevel.SetLevel(zap.DebugLevel)
+	//atomicLevel := zap.NewAtomicLevelAt(zap.DebugLevel)
+
+	//atomicLevel := zap.NewAtomicLevel()
+	//atomicLevel.SetLevel(zap.DebugLevel)
+
+	lowLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+		return lvl >= zapcore.DebugLevel
+	})
 
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConfig),                // 编码器配置
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), // 打印到控制台和文件
-		atomicLevel,                                             // 日志级别
+		lowLevel,                                                // 日志级别
 	)
 
-	// 开启开发模式，堆栈跟踪
+	// 记录 对应源码文件及行号
 	caller := zap.AddCaller()
 
-	// 开启文件及行号
+	// 开启开发模式，会记录 DPanic-level
 	//development := zap.Development()
 
 	trace := zap.AddStacktrace(zap.ErrorLevel)
