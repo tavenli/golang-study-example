@@ -35,6 +35,9 @@ func main() {
 	zap_logger_demo4()
 
 	zap_logger_demo5()
+
+	zap_logger_demo6()
+
 }
 
 func logger_demo1() {
@@ -142,11 +145,14 @@ func zap_logger_demo2() {
 	)
 
 	// From a zapcore.Core, it's easy to construct a Logger.
-	logger := zap.New(core)
+	//logger := zap.New(core)
+	logger := zap.New(core, zap.AddCaller())
 	defer logger.Sync()
 
 	logger.Debug("constructed a logger")
 	logger.Info("hi boys!")
+	logger.Warn("constructed a logger")
+	logger.Error("constructed a logger")
 	logger.Error("err:", zap.Error(errors.New("something wrong")))
 
 	fmt.Println("----------------")
@@ -192,17 +198,128 @@ func zap_logger_demo4() {
 func zap_logger_demo5() {
 	fmt.Println("zap_logger_demo5")
 
-	type foo struct {
-		One string
-		Two string
+	customTimeEncoder := func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 	}
 
-	config := zap.NewDevelopmentConfig()
-	config.EncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
-	logger, _ := config.Build()
-	logger.Debug("zap_logger_demo5", zap.Any("foo", foo{One: "one", Two: "two"}))
-	logger.Info("zap_logger_demo5", zap.Any("foo", foo{One: "one", Two: "two"}))
-	logger.Warn("zap_logger_demo5", zap.Any("foo", foo{One: "one", Two: "two"}))
-	logger.Error("zap_logger_demo5", zap.Any("foo", foo{One: "one", Two: "two"}))
+	encoderConfig := zapcore.EncoderConfig{
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "msg",
+		StacktraceKey:  "stacktrace",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.CapitalColorLevelEncoder,
+		EncodeTime:     customTimeEncoder,
+		EncodeDuration: zapcore.SecondsDurationEncoder, //
+		EncodeCaller:   zapcore.ShortCallerEncoder,
+		EncodeName:     zapcore.FullNameEncoder,
+	}
+
+	// 设置日志级别
+	atomicLevel := zap.NewAtomicLevel()
+	atomicLevel.SetLevel(zap.DebugLevel)
+
+	core := zapcore.NewCore(
+		zapcore.NewConsoleEncoder(encoderConfig),                // 编码器配置
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), // 打印到控制台和文件
+		atomicLevel,                                             // 日志级别
+	)
+
+	// 开启开发模式，堆栈跟踪
+	caller := zap.AddCaller()
+
+	// 开启文件及行号
+	//development := zap.Development()
+
+	trace := zap.AddStacktrace(zap.ErrorLevel)
+
+	// 设置初始化字段
+	filed := zap.Fields()
+	//filed := zap.Fields(zap.String("serverName", "Server1"))
+
+	// 构造日志对象
+	logger := zap.New(core, caller, trace, filed)
+
+	logger.Debug("zap_logger_demo5 constructed a logger")
+	logger.Info("zap_logger_demo5 hi boys!")
+	logger.Warn("zap_logger_demo5 constructed a logger")
+	logger.Error("zap_logger_demo5 constructed a logger")
+	logger.Error("zap_logger_demo5 err:", zap.Error(errors.New("something wrong")))
+	fmt.Println("----------------")
+}
+
+func zap_logger_demo6() {
+	fmt.Println("zap_logger_demo6")
+
+	//输出每行日志的格式，可以看 NewConsoleEncoder 或 NewJSONEncoder 对象的 EncodeEntry 函数
+
+	customTimeEncoder := func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
+	}
+
+	colorFomat := func(color uint8, text string) string { return fmt.Sprintf("\x1b[%dm%s\x1b[0m", uint8(color), text) }
+	//使用map的目的是减少字符拼接
+	colorMap := make(map[zapcore.Level]string, 4)
+	colorMap[zapcore.DebugLevel] = colorFomat(92, zapcore.DebugLevel.CapitalString())
+	colorMap[zapcore.InfoLevel] = colorFomat(94, zapcore.InfoLevel.CapitalString())
+	colorMap[zapcore.WarnLevel] = colorFomat(93, zapcore.WarnLevel.CapitalString())
+	colorMap[zapcore.ErrorLevel] = colorFomat(91, zapcore.ErrorLevel.CapitalString())
+
+	customColorLevelEncoder := func(_level zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+
+		s, ok := colorMap[_level]
+		if !ok {
+			s = colorFomat(31, _level.CapitalString())
+		}
+		enc.AppendString(s)
+
+	}
+
+	encoderConfig := zapcore.EncoderConfig{
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "msg",
+		StacktraceKey:  "stacktrace",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    customColorLevelEncoder,
+		EncodeTime:     customTimeEncoder,
+		EncodeDuration: zapcore.SecondsDurationEncoder, //
+		EncodeCaller:   zapcore.ShortCallerEncoder,
+		EncodeName:     zapcore.FullNameEncoder,
+	}
+
+	// 设置日志级别
+	atomicLevel := zap.NewAtomicLevel()
+	atomicLevel.SetLevel(zap.DebugLevel)
+
+	core := zapcore.NewCore(
+		zapcore.NewConsoleEncoder(encoderConfig),                // 编码器配置
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), // 打印到控制台和文件
+		atomicLevel,                                             // 日志级别
+	)
+
+	// 开启开发模式，堆栈跟踪
+	caller := zap.AddCaller()
+
+	// 开启文件及行号
+	//development := zap.Development()
+
+	trace := zap.AddStacktrace(zap.ErrorLevel)
+
+	// 设置初始化字段
+	filed := zap.Fields()
+
+	// 构造日志对象
+	logger := zap.New(core, caller, trace, filed)
+
+	logger.Debug("zap_logger_demo6 constructed a logger")
+	logger.Info("zap_logger_demo6 hi boys!")
+	logger.Warn("zap_logger_demo6 constructed a logger")
+	logger.Error("zap_logger_demo6 constructed a logger")
+	logger.Error("zap_logger_demo6 err:", zap.Error(errors.New("something wrong")))
 	fmt.Println("----------------")
 }
