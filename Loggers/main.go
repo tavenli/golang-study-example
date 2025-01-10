@@ -17,12 +17,38 @@ import (
 
 func main() {
 
+	//ANSI转义码 原生代码打印颜色
+
+	//步骤1：改变当前打印颜色
+	fmt.Print("\x1b[92m")
+	//或者
+	//fmt.Sprintf("\x1b[%dm", "")
+
+	//步骤2：打印
+	fmt.Println("color changed 1.")
+	fmt.Println("color changed 2.")
+	fmt.Println("color changed 3.")
+
+	//步骤3：重置颜色为默认
+	fmt.Print("\x1b[0m")
+	fmt.Println("color reset.")
+
+	//语句话 完成颜色改变和打印并重置
+	fmt.Print("\x1b[93m", "color changed", "\x1b[0m", "\n")
+	fmt.Print("\x1b[95m", "color changed", "\x1b[0m", "\n")
+
 	fmt.Println(aurora.BrightGreen("Loggers_Demo"))
 	fmt.Println(aurora.BrightRed("Loggers_Demo"))
 	fmt.Println(aurora.BrightBlue("Loggers_Demo"))
 	fmt.Println(aurora.BrightCyan("Loggers_Demo"))
 	fmt.Println(aurora.BrightYellow("Loggers_Demo"))
 	fmt.Println(aurora.BrightMagenta("Loggers_Demo"))
+
+	fmt.Println(aurora.White("Loggers_Demo"))
+	fmt.Println(aurora.Gray(0, "Loggers_Demo"))
+	fmt.Println(aurora.Gray(10, "Loggers_Demo"))
+	fmt.Println(aurora.Gray(24, "Loggers_Demo"))
+	fmt.Println(aurora.BrightWhite("Loggers_Demo"))
 
 	logger_demo1()
 
