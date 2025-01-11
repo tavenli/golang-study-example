@@ -69,3 +69,41 @@ func (_self *Girl) Eat(time int) bool {
 func (_self *Girl) Sleep() {
 	fmt.Println("Dream of a lot of money")
 }
+
+type Mutatable struct {
+	a int
+	b int
+}
+
+func (m Mutatable) StayTheSame() {
+	m.a = 5
+	m.b = 7
+}
+
+func (m *Mutatable) Mutate() {
+	m.a = 5
+	m.b = 7
+}
+
+func (Mutatable) Others() {
+	
+}
+
+func main_88() {
+
+	m := &Mutatable{0, 0}
+	fmt.Println(m)
+
+	m.StayTheSame()
+	fmt.Println(m)
+
+	m.Mutate()
+	fmt.Println(m)
+
+	/*
+		输出：
+			&{0 0}
+			&{0 0}
+			&{5 7}
+	*/
+}

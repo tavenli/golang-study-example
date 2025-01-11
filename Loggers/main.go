@@ -252,7 +252,7 @@ func zap_logger_demo5() {
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConfig),                // 编码器配置
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), // 打印到控制台和文件
-		atomicLevel,                                             // 日志级别
+		atomicLevel, // 日志级别
 	)
 
 	// 记录 对应源码文件及行号
@@ -333,7 +333,7 @@ func zap_logger_demo6() {
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConfig),                // 编码器配置
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout)), // 打印到控制台和文件
-		lowLevel,                                                // 日志级别
+		lowLevel, // 日志级别
 	)
 
 	// 记录 对应源码文件及行号
