@@ -3,11 +3,12 @@ package utils
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"runtime"
 	"time"
 )
 
-//	显示当前系统基本信息
+// 显示当前系统基本信息
 func ShowSysInf() {
 
 	fmt.Println("★★★★★★★★★★★★★★★★★★★★★★★★")
@@ -17,6 +18,23 @@ func ShowSysInf() {
 	fmt.Println("runtime.GOARCH --->", runtime.GOARCH)     //CPU架构
 	fmt.Println("runtime.Version --->", runtime.Version()) //当前GO语言版本
 	fmt.Println("time --->", time.Now())                   //系统当前时间
+
+	fmt.Println("pid --->", os.Getpid())
+	fmt.Println("Env --->", os.Environ())
+
+	// 获取当前用户信息
+	currentUser, err := user.Current()
+	if err != nil {
+		fmt.Printf("获取当前用户信息时出错: %v\n", err)
+		return
+	}
+
+	// 输出用户信息
+	fmt.Printf("用户名: %s\n", currentUser.Username)
+	fmt.Printf("用户 ID: %s\n", currentUser.Uid)
+	fmt.Printf("组 ID: %s\n", currentUser.Gid)
+	fmt.Printf("主目录: %s\n", currentUser.HomeDir)
+
 	fmt.Println("★★★★★★★★★★★★★★★★★★★★★★★★")
 
 	//var memStats runtime.MemStats
@@ -31,8 +49,8 @@ func ShowSysInf() {
 
 }
 
-//	go不支持三元表达式，可以使用自定义的函数实现
-//	例如：max := utils.If(x > y, x, y).(int)
+// go不支持三元表达式，可以使用自定义的函数实现
+// 例如：max := utils.If(x > y, x, y).(int)
 func If(condition bool, trueVal, falseVal interface{}) interface{} {
 
 	if condition {
@@ -42,26 +60,26 @@ func If(condition bool, trueVal, falseVal interface{}) interface{} {
 }
 
 /*
-	交换int数据：a, b := utils.Swap(2, 9)
-	交换字符串数据：A, B := utils.Swap("Li", "Chen")
+交换int数据：a, b := utils.Swap(2, 9)
+交换字符串数据：A, B := utils.Swap("Li", "Chen")
 */
 func Swap(x, y interface{}) (interface{}, interface{}) {
 	return y, x
 }
 
-//	设置环境变量
+// 设置环境变量
 func SetEnv(key, value string) error {
 
 	return os.Setenv(key, value)
 }
 
-//	取环境变量的值
+// 取环境变量的值
 func GetEnv(key string) string {
 
 	return os.Getenv(key)
 }
 
-//取进程ID
+// 取进程ID
 func GetPid() int {
 	return os.Getpid()
 }
